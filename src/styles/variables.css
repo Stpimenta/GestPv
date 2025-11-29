@@ -1,0 +1,31 @@
+:root {
+  /*font*/
+  --font-heading: "Inter", sans-serif;
+  --h1-size: 2.2rem;
+  --h2-size: 1.8rem;
+  --h3-size: 1.5rem;
+  --h4-size: 1.3rem;
+  --h5-size: 1.1rem;
+  --h6-size: 1rem;
+
+  --heading-weight: 560;      
+  --heading-line-height: 1.25; 
+  --heading-letter: -0.3px;    
+
+  /*space*/
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+   /* radius */
+
+}
