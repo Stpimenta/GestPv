@@ -2,37 +2,35 @@ import { createApp } from "vue";
 import { router } from "@/router/index";
 import App from "./App.vue";
 
+//pinia
+import {createPinia} from "pinia"
+
 //default css
-import "@/styles/default.css";
-import "@/styles/variables.css";
+import "@/ui/styles/default.css";
+import "@/ui/styles/variables.css";
 import 'primeicons/primeicons.css'
 
 import PrimeVue from "primevue/config";
-import { BluePreset } from "@/styles/BluePreset.ts";
+import { BluePreset } from "@/ui/styles/BluePreset.ts";
 
-//theme
-import {toogleTheme} from "./composables/theme.ts";
-
-
+//primeVUE components
 import { Dialog,Button,FloatLabel,InputText,Password} from "primevue";
 
-const app = createApp(App);
+//theme
+import { useThemeStore } from "./stores";
 
+
+//router
+const app = createApp(App);
 app.use(router);
 
-const {isDark} = toogleTheme();
+//pinia
+app.use(createPinia());
 
-if(window.matchMedia("(prefers-color-scheme: dark)").matches)
-{
-  isDark.value = true;
-}
+const themeStore = useThemeStore();
+themeStore.initTheme();
 
-else
-{
-  isDark.value = false;
-}
-
-
+//primeVUE components
 app.use(PrimeVue, {
   theme: {
     preset: BluePreset,

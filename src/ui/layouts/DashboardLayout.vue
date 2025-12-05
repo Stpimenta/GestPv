@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import Sidebar from '@/components/Sidebar.vue'
-import Navbar from '@/components/Navbar.vue'
+import Navbar from '@/ui/layouts/components/Navbar.vue'
+import Sidebar from '@/ui/layouts/components/Sidebar.vue'
 </script>
 
 <style scoped>

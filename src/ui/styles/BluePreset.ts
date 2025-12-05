@@ -6,7 +6,7 @@ export const BluePreset = definePreset(Aura, {
   semantic: {
     /* ---------- PRIMARY (teal) ---------- */
     primary: {
-      50: "{sky.50}",
+      50: "{sky.50}", 
       100: "{sky.100}",
       200: "{sky.200}",
       300: "{sky.300}",
@@ -23,7 +23,7 @@ export const BluePreset = definePreset(Aura, {
       /* ---------------------- LIGHT MODE ---------------------- */
       light: {
         surface: {
-          0: "#FFFFFFFF", // texto preto no modo claro
+          0: "#FFFFFFFF", 
           50: "{zinc.50}",
           100: "{zinc.100}",
           200: "{zinc.200}",
@@ -47,7 +47,7 @@ export const BluePreset = definePreset(Aura, {
 
       dark: {
         surface: {
-          0: "#FFFFFF",
+          0: "#FFFFFF", 
           50: "{zinc.50}",
           100: "{zinc.100}",
           200: "{zinc.200}",
