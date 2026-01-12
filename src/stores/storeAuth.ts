@@ -4,7 +4,7 @@ import type { modelLoginRequest, modelAuthenticated } from "@/models";
 
 export const userAuthStore = defineStore("login", {
   state: () => ({
-    credentials: null as  modelAuthenticated| null,
+    credentials: null as modelAuthenticated | null,
     loading: false,
     error: null as string | null,
   }),
@@ -14,7 +14,7 @@ export const userAuthStore = defineStore("login", {
       this.loading = true;
       this.error = null;
 
-      const delay = new Promise((resolve) => setTimeout(resolve, 1000)); 
+      const delay = new Promise((resolve) => setTimeout(resolve, 600));
 
       const { data, error } = await loginService(payload);
 
@@ -29,5 +29,9 @@ export const userAuthStore = defineStore("login", {
     logout() {
       this.credentials = null;
     },
+  },
+
+  persist: {
+    pick: ["credentials"],
   },
 });

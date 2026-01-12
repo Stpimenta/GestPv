@@ -8,6 +8,12 @@
 
 html, body, #app {
   height: 100%;
+  overflow-x: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column; 
 }
 
 #app {

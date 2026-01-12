@@ -18,6 +18,14 @@ export const useThemeStore = defineStore("theme", () => {
       root.style.setProperty("--login-form-border", "rgba(255, 255, 255, 0.10)");
       root.style.setProperty("--login-form-shadow", "0 8px 28px rgba(0, 0, 0, 0.40)");
       root.style.setProperty("--login-title-text", "rgba(200, 220, 240, 0.9)");
+
+      root.style.setProperty("--menu-hover-bg", "#374151");
+      root.style.setProperty("--menu-active-bg", "#2563eb");
+      root.style.setProperty("--menu-active-color", "#ffffff");
+      
+      root.style.setProperty("--sidebar-border", "rgba(255, 255, 255, 0.06)");
+      root.style.setProperty("--divider-border", "rgba(255, 255, 255, 0.06)");
+
     } else {
       root.classList.remove("my-app-dark");
       root.style.setProperty(
@@ -28,6 +36,12 @@ export const useThemeStore = defineStore("theme", () => {
       root.style.setProperty("--login-form-border", "rgba(255, 255, 255, 0.25)");
       root.style.setProperty("--login-form-shadow", "0 8px 28px rgba(0, 0, 0, 0.15)");
       root.style.setProperty("--login-title-text", "rgb(46, 97, 121)");
+      root.style.setProperty("--menu-hover-bg", "#e5e7eb");
+      root.style.setProperty("--menu-active-bg", "#dbeafe");
+      root.style.setProperty("--menu-active-color", "#1e3a8a");
+
+      root.style.setProperty("--sidebar-border", "rgba(0, 0, 0, 0.06)");
+      root.style.setProperty("--divider-border", "rgba(0, 0, 0, 0.06)");
     }
   }
 

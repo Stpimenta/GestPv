@@ -26,6 +26,32 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
+   /* base */
+  --z-base: 0;
+
+  /* layout */
+  --z-navbar: 10;
+  --z-sidebar: 20;
+
+  /* overlays */
+  --z-overlay: 10;
+
+  /* modais */
+  --z-modal: 40;
+  --z-toast: 50;
+
+}
 
 
+:root {
+  --bg-header: var(--p-surface-100); 
+  --bg-surface: var(--p-surface-100); 
+  --border-subtle: rgba(119, 119, 119, 0.219);
+}
+
+
+.my-app-dark {
+  --bg-header: var(--p-surface-800); 
+  --bg-surface: var(--p-surface-800); 
+  --border-subtle: rgba(255, 255, 255, 0.15);
 }

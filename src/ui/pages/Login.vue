@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import { useRouter } from "vue-router";
-import { Form } from '@primevue/forms';
 import logo from '@/assets/imgs/newlogo.png';
 
 import { userAuthStore } from "@/stores"
 import { useThemeStore } from "@/stores";
+import type { Password } from "primevue";
 
 
 const theme = useThemeStore();
 
 function switchTheme() {
-  theme.toggleTheme();
+    theme.toggleTheme();
 }
 //dialog
 const dialogVisible = ref(false);
@@ -58,13 +58,21 @@ async function login() {
     if (auth.credentials) {
         router.push("/dash");
     }
+
+
 }
 
 
+const passwordInput = ref<InstanceType<typeof Password> | any>(null);
 
-//dialog
 
 
+onMounted(() => {
+
+    if (auth.credentials) {
+        router.push('/dash')
+    }
+})
 
 </script>
 
@@ -78,29 +86,32 @@ async function login() {
         <div class="div-form">
 
             <div class="div-title">
-                <img :src="logo" alt="logo" class="form-logo"></img>
-                <h3 style="">Bem-vindo de volta</h3>
+                <img :src="logo" alt="logo" class="form-logo" />
+                <h3>Bem-vindo de volta</h3>
                 <p>insira suas credenciais para acessar o painel GestPv</p>
             </div>
 
-            <Form class="login-form">
+            <form class="login-form" @submit.prevent="login">
+
                 <div class="item-form">
                     <label for="username">Email</label>
-                    <InputText id="username" class="input-form" fluid v-model="form.gmail" aria-describedby="email"
-                        placeholder="seu@email.com" />
+                    <InputText id="username" class="input-form" fluid v-model="form.gmail" placeholder="seu@email.com"
+                        @keydown.enter.prevent="
+                            passwordInput?.$el.querySelector('input')?.focus()
+                            " />
                 </div>
 
                 <div class="item-form">
-                    <label for="username">Senha</label>
-                    <Password v-model="form.senha" toggleMask fluid :feedback="false" placeholder="*********" />
+                    <label for="password">Senha</label>
+                    <Password id="password" ref="passwordInput" v-model="form.senha" toggleMask fluid :feedback="false"
+                        placeholder="*********" @keydown.enter="login" />
                 </div>
 
-                <Button label="Entrar" class="btn-bold" :loading="auth.loading" @click="login" />
-
-            </Form>
-
+                <Button label="Entrar" class="btn-bold" :loading="auth.loading" type="submit" />
+            </form>
 
         </div>
+
 
         <div class="div-footer">
             <p>© 2025 Desenvolvido por Sérgio T. Pimenta</p>
@@ -132,10 +143,11 @@ async function login() {
 <style scoped>
 .main-div {
     display: flex;
-    flex: 1;
+    height: 100vh;
     justify-content: center;
     align-items: center;
     background: var(--bg-login);
+
     position: relative;
 }
 

@@ -81,6 +81,11 @@ export const BluePreset = definePreset(Aura, {
               hoverColor:"#FFFFFFFF",
               activeColor:"#FFFFFFFF",
 
+            },
+            danger:{
+              color:"#FFFFFFFF",
+              hoverColor:"#FFFFFFFF",
+              activeColor:"#FFFFFFFF",
             }
           }
         }
