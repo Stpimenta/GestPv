@@ -8,6 +8,7 @@ import { useToast } from 'primevue';
 import { useEarnedStore } from '@/stores';
 import { useWalletStore } from '@/stores';
 import debounce from "lodash-es/debounce";
+import TokenSelectorDialog from './TokenSelectorDialog.vue';
 
 
 
@@ -42,7 +43,7 @@ const form = reactive({
     data: '',
     idCaixa: null,
     tokenMembro: '',
-    urlEnvelope: undefined,
+    urlEnvelope: '',
 });
 
 
@@ -102,6 +103,8 @@ const schema = z.object({
         .optional(),
 });
 
+//select Token Dialog
+const visibleSelectTokenDialog = ref(false);
 
 // closeModal
 watch(
@@ -199,6 +202,8 @@ const onSubmit = async () => {
 </script>
 
 <template>
+
+    <!-- form -->
     <Dialog :visible="visible" modal :header="title" :style="{ width: '30rem' }"
         @update:visible="emit('update:visible', $event)">
 
@@ -216,21 +221,29 @@ const onSubmit = async () => {
 
 
                 <div>
+
                     <InputText v-model="form.descricao" placeholder="Descrição" @input="clearError('descricao')"
                         class="form-field" />
+
                     <Message v-if="errors.descricao" severity="error" size="small" variant="simple">
                         {{ errors.descricao }}
                     </Message>
+
                 </div>
 
 
-                <!-- <div>
-                    <InputText v-model="form.numeroFiscal" placeholder="Numero Fiscal" @input="errors.email = ''"
-                        class="form-field" />
+                <div>
+                    <div class="form-row">
+                        <InputText v-model="form.tokenMembro" placeholder="Token do Usuário" @input="clearError('tokenMembro')"
+                            class="form-field" style="width: 80%;" />
+                        <Button icon="pi pi-user" severity="info" aria-label="User"
+                            style="width: 15%; max-width: 45px;" v-on:click="visibleSelectTokenDialog = true"/>
+                    </div>
+
                     <Message v-if="errors.numeroFiscal" severity="error" size="small" variant="simple">
                         {{ errors.numeroFiscal }}
                     </Message>
-                </div> -->
+                </div>
 
 
 
@@ -275,6 +288,8 @@ const onSubmit = async () => {
         </div>
     </Dialog>
 
+    <!-- select user token Dialog -->
+    <TokenSelectorDialog v-model:visible="visibleSelectTokenDialog" v-model:token="form.tokenMembro" />
 
 
 
@@ -292,6 +307,7 @@ const onSubmit = async () => {
 .form-field {
     width: 100%;
 }
+
 
 .form-row {
     display: flex;

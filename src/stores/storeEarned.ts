@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { getEarnedsService, deleteEarnedService, createEarnedService } from "@/services";
-import type { EarnedQuery, EarnedsResponse, EarnedCreate } from "@/api";
+import type { EarnedQuery, EarnedsResponse, EarnedCreate, Earned } from "@/api";
+
+import type {EarnedServiceUICreate } from "@/services";
 
 export const useEarnedStore = defineStore("earneds", {
   state: () => ({
@@ -54,7 +56,7 @@ export const useEarnedStore = defineStore("earneds", {
       this.hasMore = true;
     },
 
-    async createEarned(earned: EarnedCreate): Promise<boolean> {
+    async createEarned(earned: EarnedServiceUICreate): Promise<boolean> {
       this.createLoading = true;
 
       const response = await createEarnedService(earned);
@@ -69,12 +71,12 @@ export const useEarnedStore = defineStore("earneds", {
       return response.success;
     },
 
-    async deleteEarned(id: number) {
-      const response = await deleteEarnedService(id);
-
+    async deleteEarned(earned:Earned) {
+      const response = await deleteEarnedService(earned);
+      console.log(earned)
       if (response.success) {
         if (this.data?.items) {
-          this.data.items = this.data.items.filter((item) => item.id !== id);
+          this.data.items = this.data.items.filter((item) => item.id !== earned.id);
         }
         return;
       }

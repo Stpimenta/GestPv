@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { createExpenseService, deleteExpenseService, getExpensesService } from "@/services";
-import type { ExpenseCreate, ExpensesQuery, ExpensesResponse } from "@/api";
+import type { Expense, ExpenseCreate, ExpensesQuery, ExpensesResponse } from "@/api";
 
 export const useExpenseStore = defineStore("expenses", {
   state: () => ({
@@ -71,14 +71,14 @@ export const useExpenseStore = defineStore("expenses", {
 
     },
 
-    async deleteExpense(id:number) {
+    async deleteExpense(expense:Expense) {
 
-      const response = await deleteExpenseService(id);
+      const response = await deleteExpenseService(expense);
       
       if(response.success)
       {
         if(this.data?.items)
-          this.data.items = this.data.items.filter(item => item.id !== id);
+          this.data.items = this.data.items.filter(item => item.id !== expense.id);
         return;
       }
       this.error = response.error

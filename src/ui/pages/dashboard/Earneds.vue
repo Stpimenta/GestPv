@@ -100,6 +100,7 @@ watch(
     if (error) {
       EDvisible.value = true;
       EDerror.value = error;
+      earnedStore.error = "";
     }
   }
 )
@@ -110,6 +111,7 @@ watch(
     if (error) {
       EDvisible.value = true;
       EDerror.value = error;
+      walletStore.error = "";
     }
   }
 )
@@ -118,9 +120,9 @@ watch(
 const visibleEntryDialog = ref(false);
 
 //DELETE DIALOG
-const confirmRemove = (id, about) => {
+const confirmRemove = (item) => {
   useConfirmDialog.require({
-    message: `Deseja deletar "${about}"?`,
+    message: `Deseja deletar "${item.descricao?item.descricao : item.tokenMembro}"?`,
     header: 'Zona Perigosa',
     icon: 'pi pi-info-circle',
     rejectLabel: 'Cancel',
@@ -130,11 +132,11 @@ const confirmRemove = (id, about) => {
       outlined: true
     },
     acceptProps: {
-      label: 'SIm',
+      label: 'Sim',
       severity: 'danger'
     },
     accept: async () => {
-      await earnedStore.deleteEarned(id);
+      await earnedStore.deleteEarned(item);
     },
     reject: () => {
 
@@ -189,7 +191,7 @@ const confirmRemove = (id, about) => {
       <TransactionCard v-for="item in earnedStore.data?.items || []" :key="item.id" :type="'contribuição'"
         :description="item.descricao ? item.descricao : item.tokenMembro" :wallet="item.caixa"
         :date="new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })" :value="item.valor"
-        :barColor="'#4EC772'" :hyphen="false" @edit="edit(item)" @delete="confirmRemove(item.id, item.descricao ? item.descricao : item.tokenMembro)" />
+        :barColor="'#4EC772'" :hyphen="false" @edit="edit(item)" @delete="confirmRemove(item)" />
     </div>
 
     <div class="" v-if="earnedStore.loading && earnedStore.data != null">
