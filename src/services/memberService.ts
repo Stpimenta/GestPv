@@ -19,6 +19,11 @@ export async function getMemberByToken(token:string):Promise<{ member: Member | 
 
     const {data,error} = await getMembersService({itensQuantity:10,page:1,token:token});
 
+    if(error)
+    {
+      return { member: null, error: error }
+    }
+
     const items = data?.items || []
 
     if(items.length == 0){

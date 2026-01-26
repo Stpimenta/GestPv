@@ -59,7 +59,7 @@ const allowedRolesForDashSystem: EnumRole[] = [
   EnumRole.tesouraria,
 ];
 
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to,_from,next)=>{
     const authStore = userAuthStore();
 
     if(to.path.startsWith("/dash")){
