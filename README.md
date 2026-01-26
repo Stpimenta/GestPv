@@ -4,9 +4,10 @@
 Este front-end em **Vue.js** com **PrimeVue** consome a **API do IBPV**, permitindo aos usuários gerenciar:
 
 - **Membros** — adicionar, editar, visualizar e excluir registros  
-- **Gastos** — controlar despesas da igreja  
-- **Contribuições** — gerenciar doações e arrecadações  
-- **Caixa e relatórios** — visualizar saldos e gerar relatórios financeiros  
+- **Bloquear Periodos** — Permitir Bloqueio de periodos, e dupla verificação para alterações
+- **Gastos** — controlar despesas da igreja  --feito 
+- **Contribuições** — gerenciar doações e arrecadações  -- feito
+- **Caixa e relatórios** — visualizar saldos e gerar relatórios financeiros  Em Andamento
 
 O objetivo é fornecer uma interface leve, responsiva e intuitiva, mantendo toda a lógica de negócio centralizada na API.
 

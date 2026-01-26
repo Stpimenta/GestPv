@@ -32,13 +32,12 @@ const props = defineProps({
 
 defineExpose({
   clear
-})
+});
 
+const emit = defineEmits(['update:modelValue'], ['remove-existing']);
 
-const emit = defineEmits(['update:modelValue'], ['remove-existing'])
-
-const internalFiles = ref([])
-const errorMessage = ref('')
+const internalFiles = ref([]);
+const errorMessage = ref('');
 
 function onSelect(event) {
   const inputFiles = Array.from(event.target.files)
