@@ -17,9 +17,18 @@ const props = defineProps({
 })
 
 const formattedValue = computed(() => {
+  if (props.value == null) return '-'
+
   const sign = props.hyphen ? '-' : '+'
-  return `${sign} R$ ${Math.abs(props.value).toFixed(2)}`
+
+  const valueBR = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(Math.abs(props.value))
+
+  return `${sign} ${valueBR}`
 })
+
 </script>
 
 
@@ -29,7 +38,7 @@ const formattedValue = computed(() => {
     <div class="expenses-div-actions-wallet">
 
       <div class="card-actions">
-        <Button icon="pi pi-pen-to-square" severity="secondary" rounded @click="$emit('edit')" />
+        <Button icon="pi pi-eye" severity="secondary" rounded @click="$emit('view')" />
         <Button icon="pi pi-trash" severity="secondary" rounded @click="$emit('delete')" />
       </div>
 
@@ -50,6 +59,9 @@ const formattedValue = computed(() => {
         {{ formattedValue }}
       </p>
     </div>
+
+   
+    
   </div>
 </template>
 
@@ -81,7 +93,9 @@ const formattedValue = computed(() => {
   padding: 16px 16px 16px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, .08);
-   transition: none !important;
+  transition: none !important;
+  justify-content: center;
+  align-items: center;
 }
 
 .expenses-div-actions-wallet{
@@ -98,7 +112,9 @@ const formattedValue = computed(() => {
 
 
 
-/* Barra lateral */
+
+
+/* side bar */
 .bar {
   position: absolute;
   left: 0;
@@ -124,7 +140,7 @@ const formattedValue = computed(() => {
   margin: 4px 0;
 }
 
-/* Ações */
+/* actions */
 .card-actions {
   position: absolute;
   top: 8px;
@@ -134,6 +150,12 @@ const formattedValue = computed(() => {
   opacity: 0;
   pointer-events: none;
   transition: opacity .2s ease;
+
+
+  background-color: var(--bg-surface);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  
 }
 
 .expenses-card:hover .card-actions {
