@@ -18,34 +18,75 @@ const earnedStore = useEarnedStore();
 const props = defineProps({
     visible: { type: Boolean, required: true },
     title: { type: String, default: 'Nova Entrada' },
+    editId: {
+        type: Number,
+        default: null
+    }
 });
 
-const emit = defineEmits(['update:visible']);
+const emit = defineEmits(['update:visible', 'update:editId'])
 const hasPosted = ref(false);
+
+
+// form items
+const form = reactive({
+    valor: null,
+    descricao: '',
+    data: null,
+    idCaixa: null,
+    tokenMembro: '',
+    urlEnvelope: '',
+    images: [],
+});
+
+// File Input
+const fileInputRef = ref(null)
+const files = ref([]);
+
+// exist image
+const onRemoveExisting = (id) => {
+    form.images = form.images.filter(img => img.id !== id);
+    console.log(form.images);
+}
+
+//init form Update
+const initForm = () => {
+
+    const data = earnedStore.earnedDetail;
+    if (!data) return;
+    const d = new Date(data.data);
+    form.data = new Date(
+        d.getUTCFullYear(),
+        d.getUTCMonth(),
+        d.getUTCDate()
+    );
+    form.valor = data.valor ?? null;
+    form.descricao = data.descricao ?? '';
+    form.idCaixa = data.idCaixa ?? null;
+    form.tokenMembro = data.tokenMembro ?? '';
+    form.urlEnvelope = data.urlEnvelope ?? '';
+    form.images = data.images;
+
+};
+
 
 //open
 watch(
     () => props.visible,
-    (isOpen) => {
+    async (isOpen) => {
         if (isOpen) {
-            console.log("open dialog");
+            if (props.editId) {
+                await earnedStore.fetchEarnedById(props.editId)
+                console.log(earnedStore.updateEarned);
+                initForm();
+            }
+
         }
     }
 )
 
 //toast
 const toast = useToast();
-
-// form items
-const form = reactive({
-    valor: null,
-    descricao: '',
-    data: '',
-    idCaixa: null,
-    tokenMembro: '',
-    urlEnvelope: '',
-});
-
 
 // Errors
 const errors = reactive({
@@ -123,6 +164,11 @@ const clearDialog = () => {
     form.idCaixa = null;
     form.tokenMembro = null;
     form.urlEnvelope = undefined;
+    fileInputRef.value?.clear();
+    if (props.editId) {
+        emit('update:editId', null)
+    }
+
 };
 
 const closeDialog = () => {
@@ -153,6 +199,7 @@ watch(
     { immediate: true }
 );
 
+
 const onSubmit = async () => {
     Object.keys(errors).forEach(key => {
         errors[key] = '';
@@ -170,8 +217,8 @@ const onSubmit = async () => {
         errors.tokenMembro = fieldErrors.tokenMembro?.[0] || '';
         errors.urlEnvelope = fieldErrors.urlEnvelope?.[0] || '';
 
-        console.log("sem sucesso");
-        console.log(fieldErrors);
+        // console.log("sem sucesso");
+        // console.log(fieldErrors);
         return;
     }
 
@@ -181,11 +228,27 @@ const onSubmit = async () => {
         files: ' ',
     };
 
-    console.log(payload);
-    const success = await earnedStore.createEarned(payload);
+    const isEdit = !!props.editId;
+
+    const success = isEdit
+        ? await earnedStore.updateEarned(payload,files.value)
+        : await earnedStore.createEarned(payload,files.value);
 
 
     if (success) {
+
+        if (isEdit) {
+            toast.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Registro Editado',
+                life: 3000
+            });
+            hasPosted.value = true;
+            closeDialog();
+            return;
+        }
+
 
         toast.add({
             severity: 'success',
@@ -195,6 +258,7 @@ const onSubmit = async () => {
         });
         hasPosted.value = true;
         clearDialog();
+
     }
 
 };
@@ -234,10 +298,10 @@ const onSubmit = async () => {
 
                 <div>
                     <div class="form-row">
-                        <InputText v-model="form.tokenMembro" placeholder="Token do Usuário" @input="clearError('tokenMembro')"
-                            class="form-field" style="width: 80%;" />
-                        <Button icon="pi pi-user" severity="info" aria-label="User"
-                            style="width: 15%; max-width: 45px;" v-on:click="visibleSelectTokenDialog = true"/>
+                        <InputText v-model="form.tokenMembro" placeholder="Token do Usuário"
+                            @input="clearError('tokenMembro')" class="form-field" style="width: 80%;" />
+                        <Button icon="pi pi-user" severity="info" aria-label="User" style="width: 15%; max-width: 45px;"
+                            v-on:click="visibleSelectTokenDialog = true" />
                     </div>
 
                     <Message v-if="errors.numeroFiscal" severity="error" size="small" variant="simple">
@@ -270,7 +334,14 @@ const onSubmit = async () => {
 
 
                 <!-- file input -->
-                <FileInput v-model="files" />
+                 <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes" :max-files="4"
+                    :max-size-mb="3" :existingImages="form.images" accept="
+                    .pdf,.doc,.docx,
+                    application/pdf,
+                    application/msword,
+                    application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                " @remove-existing="onRemoveExisting" />
+
 
                 <!-- btns -->
                 <div class="btn-row">
@@ -291,13 +362,11 @@ const onSubmit = async () => {
     <!-- select user token Dialog -->
     <TokenSelectorDialog v-model:visible="visibleSelectTokenDialog" v-model:token="form.tokenMembro" />
 
-
-
 </template>
 
 
 
-<style>
+<style scoped>
 .form {
     display: flex;
     flex-direction: column;

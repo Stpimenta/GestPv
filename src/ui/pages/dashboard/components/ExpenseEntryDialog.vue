@@ -16,20 +16,19 @@ const walletStore = useWalletStore();
 const props = defineProps({
     visible: { type: Boolean, required: true },
     title: { type: String, default: 'Nova Saída' },
+    editId: {
+        type: Number,
+        default: null
+    }
 });
 
-const emit = defineEmits(['update:visible']);
+const emit = defineEmits(['update:visible', 'update:editId']);
+
+
+
 const hasPosted = ref(false);
 
-//open
-watch(
-    () => props.visible,
-    (isOpen) => {
-        if (isOpen) {
-            console.log("open dialog");
-        }
-    }
-)
+
 
 //toast
 const toast = useToast();
@@ -42,8 +41,44 @@ const form = reactive({
     idCaixa: null,
     data: '',
     urlComprovante: ' ',
+    images: [],
 });
 
+// File Input
+const fileInputRef = ref(null)
+const files = ref([]);
+
+const initForm = async () => {
+
+    const data = expenseStore.expenseUpdate;
+    const d = new Date(data.data);
+    form.data = new Date(
+        d.getUTCFullYear(),
+        d.getUTCMonth(),
+        d.getUTCDate()
+    );
+    form.valor = data.valor ?? null;
+    form.descricao = data.descricao ?? '';
+    form.idCaixa = data.idCaixa ?? null;
+    form.urlComprovante = data.urlComprovante ?? '';
+    form.numeroFiscal = data.numeroFiscal ?? '';
+    
+    form.images = data.images;
+
+};
+
+//open
+watch(
+    () => props.visible,
+    async (isOpen) => {
+        if (isOpen) {
+            if (props.editId) {
+                await expenseStore.fetchExpenseById(props.editId);
+                initForm();
+            }
+        }
+    }
+)
 
 // Errors
 const errors = reactive({
@@ -114,7 +149,13 @@ const clearDialog = () => {
     form.numeroFiscal = '';
     form.data = '';
     form.urlComprovante = ' ';
+    fileInputRef.value?.clear();
+
+    if (props.editId) {
+        emit('update:editId', null)
+    }
 };
+
 
 const closeDialog = () => {
 
@@ -123,6 +164,7 @@ const closeDialog = () => {
     }
 
     clearDialog();
+
     if (hasPosted.value) {
         hasPosted.value = false;
         expenseStore.resetExpenses();
@@ -170,12 +212,27 @@ const onSubmit = async () => {
         files: ' ',
     };
 
+    const isEdit = !!props.editId;
+
     // console.log(payload);
 
-    const success = await expenseStore.createExpense(payload);
+    const success = isEdit
+        ? await expenseStore.updateExpense(payload, files.value)
+        : await expenseStore.createExpense(payload, files.value);
 
 
     if (success) {
+        if (isEdit) {
+            toast.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Registro editado',
+                life: 3000
+            });
+            hasPosted.value = true;
+            closeDialog();
+            return;
+        }
 
         toast.add({
             severity: 'success',
@@ -188,6 +245,13 @@ const onSubmit = async () => {
     }
 
 };
+
+
+// exist image
+const onRemoveExisting = (id) => {
+    form.images = form.images.filter(img => img.id !== id);
+    console.log(form.images);
+}
 
 </script>
 
@@ -250,7 +314,8 @@ const onSubmit = async () => {
 
 
                 <!-- file input -->
-                <FileInput v-model="files" />
+                <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes" :max-files="4"
+                    :max-size-mb="3" :existingImages="form.images" accept='image/*,.pdf,.doc,.docx' @remove-existing="onRemoveExisting" />
 
                 <!-- btns -->
                 <div class="btn-row">
@@ -275,7 +340,7 @@ const onSubmit = async () => {
 
 
 
-<style>
+<style scoped>
 .form {
     display: flex;
     flex-direction: column;

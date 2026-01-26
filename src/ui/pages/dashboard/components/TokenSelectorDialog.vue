@@ -132,7 +132,7 @@ watch(
     </Dialog>
 </template>
 
-<style>
+<style scoped>
 .dialog-header {
     font-size: 1.5rem;
     display: flex;

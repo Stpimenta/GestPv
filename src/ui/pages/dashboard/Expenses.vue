@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
-import TransactionCard from './components/TransactionCardCard.vue'
+import TransactionCard from './components/TransactionCard.vue'
 import ExpensesEntryDialog from './components/ExpenseEntryDialog.vue'
 import { useWalletStore } from '@/stores';
 import { useExpenseStore } from '@/stores/storeExpenses';
 import { useConfirm } from "primevue/useconfirm";
 import debounce from "lodash-es/debounce";
 import ErrorDialog from './components/ErrorDialog.vue';
-
+import ExpenseDetailsDialog from './components/ExpenseDetailsDialog.vue';
 
 
 const useConfirmDialog = useConfirm();
@@ -115,8 +115,19 @@ watch(
   }
 )
 
-//ADD EXPENSE DIALOG
+//ADD EXPENSE DIALOG || EDIT
 const visibleEntryDialog = ref(false);
+const editingId = ref(null);
+
+const openCreate = () => {
+  editingId.value = null
+  visibleEntryDialog.value = true
+}
+
+const openEdit = (id) => {
+  editingId.value = id
+  visibleEntryDialog.value = true
+}
 
 //DELETE DIALOG
 const confirmRemove = (item) => {
@@ -143,6 +154,15 @@ const confirmRemove = (item) => {
   });
 };
 
+//DETAILS DIALOG
+const visibleDetailsDialog = ref(false);
+const detailsId = ref(null);
+
+const openDetails = (id) => {
+  detailsId.value = id
+  visibleDetailsDialog.value = true
+}
+
 </script>
 
 <template>
@@ -150,8 +170,8 @@ const confirmRemove = (item) => {
   <div class="main-div">
 
     <div class="title">
-      <h2>Saídas / Gastos</h2>
-      <Button @click="visibleEntryDialog = true" type="button" label="Nova Saída" icon="pi pi-plus" />
+      <h2>Saídas</h2>
+      <Button @click="openCreate()" type="button" label="Nova Saída" icon="pi pi-plus" />
     </div>
 
     <!-- ToolBar -->
@@ -190,7 +210,8 @@ const confirmRemove = (item) => {
       <TransactionCard v-for="item in expenseStore.data?.items || []" :key="item.id" :type="'despesa'"
         :description="item.descricao" :wallet="item.caixa"
         :date="new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })" :value="item.valor"
-        :barColor="'#ea5455'" :hyphen="true" @edit="edit(item)" @delete="confirmRemove(item)" />
+        :barColor="'#ea5455'" :hyphen="true" @edit="openEdit(item.id)" @delete="confirmRemove(item)" 
+        @view="openDetails(item.id)"/>
     </div>
 
     <div class="" v-if="expenseStore.loading && expenseStore.data != null">
@@ -201,11 +222,20 @@ const confirmRemove = (item) => {
   </div>
 
 
-  <ExpensesEntryDialog v-model:visible="visibleEntryDialog" title="Nova Saída">
-  </ExpensesEntryDialog>
-
+  <ExpensesEntryDialog
+  v-model:visible="visibleEntryDialog"
+  :editId="editingId"
+  :title="editingId ? 'Editar Saída' : 'Nova Saída'"
+  />
   <ErrorDialog v-model:visible="EDvisible" :message="EDerror" />
   <ConfirmDialog></ConfirmDialog>
+  
+  <ExpenseDetailsDialog
+    v-model:visible="visibleDetailsDialog"
+    :detailsId="detailsId"
+    @edit="openEdit"
+  />
+
 </template>
 
 

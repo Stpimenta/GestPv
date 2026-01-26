@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
-import TransactionCard  from './components/TransactionCardCard.vue'
+import TransactionCard  from './components/TransactionCard.vue'
 import EarnedEntryDialog from './components/EarnedEntryDialog.vue'
 import { useWalletStore } from '@/stores';
 
 import { useConfirm } from "primevue/useconfirm";
 import debounce from "lodash-es/debounce";
 import ErrorDialog from './components/ErrorDialog.vue';
+import EarnedDetailsDialog from './components/EarnedDetailsDialog.vue';
 import { useEarnedStore } from '@/stores/storeEarned';
 
 
@@ -116,8 +117,20 @@ watch(
   }
 )
 
-//ADD EXPENSE DIALOG
+//ADD EXPENSE DIALOG || EDIT 
 const visibleEntryDialog = ref(false);
+const editingId = ref(null);
+
+const openCreate = () => {
+  editingId.value = null
+  visibleEntryDialog.value = true
+}
+
+const openEdit = (id) => {
+  editingId.value = id
+  visibleEntryDialog.value = true
+}
+
 
 //DELETE DIALOG
 const confirmRemove = (item) => {
@@ -144,6 +157,15 @@ const confirmRemove = (item) => {
   });
 };
 
+//DETAILS DIALOG
+const visibleDetailsDialog = ref(false);
+const detailsId = ref(null);
+
+const openDetails = (id) => {
+  detailsId.value = id
+  visibleDetailsDialog.value = true
+}
+
 </script>
 
 <template>
@@ -152,7 +174,7 @@ const confirmRemove = (item) => {
 
     <div class="title">
       <h2>Entradas </h2>
-      <Button @click="visibleEntryDialog = true" type="button" label="Nova Entrada" icon="pi pi-plus" />
+      <Button @click="openCreate" type="button" label="Nova Entrada" icon="pi pi-plus" />
     </div>
 
     <!-- ToolBar -->
@@ -191,7 +213,7 @@ const confirmRemove = (item) => {
       <TransactionCard v-for="item in earnedStore.data?.items || []" :key="item.id" :type="'contribuição'"
         :description="item.descricao ? item.descricao : item.tokenMembro" :wallet="item.caixa"
         :date="new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })" :value="item.valor"
-        :barColor="'#4EC772'" :hyphen="false" @edit="edit(item)" @delete="confirmRemove(item)" />
+        :barColor="'#4EC772'" :hyphen="false" @edit="openEdit(item.id)" @view="openDetails(item.id)" @delete="confirmRemove(item)" />
     </div>
 
     <div class="" v-if="earnedStore.loading && earnedStore.data != null">
@@ -202,10 +224,19 @@ const confirmRemove = (item) => {
   </div>
 
 
-  <EarnedEntryDialog v-model:visible="visibleEntryDialog" title="Nova Entrada">
-  </EarnedEntryDialog>
-
+  <EarnedEntryDialog 
+    v-model:visible="visibleEntryDialog"
+    :editId="editingId"
+    :title="editingId ? 'Editar Entrada' : 'Nova Entrada'"
+  />
   <ErrorDialog v-model:visible="EDvisible" :message="EDerror" />
+
+  <EarnedDetailsDialog
+    v-model:visible="visibleDetailsDialog"
+    :detailsId="detailsId"
+    :title="'abacate'"
+    @edit="openEdit"
+  />
   <ConfirmDialog></ConfirmDialog>
 </template>
 
