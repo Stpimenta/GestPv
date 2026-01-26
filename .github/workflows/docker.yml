@@ -1,11 +1,13 @@
 name: Build and Push Docker Image
 
+env:
+  IMAGE_NAME: ghcr.io/stpimenta/gestpv
 
 on:
   push:
     branches:
       - main
-      
+
 permissions:
   contents: read
   packages: write
