@@ -46,11 +46,9 @@ jobs:
           build-args: |
             VITE_IBPV_API_URL=${{ secrets.VITE_IBPV_API_URL }}
       
-      - name: Trigger Portainer Webhook
-
+      - name: Trigger Portainer webhook
         run: |
-          curl -X POST \
+          curl -f -X POST \
             -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
             -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
             ${{ secrets.PORTAINER_WEBHOOK_URL }}
-       
