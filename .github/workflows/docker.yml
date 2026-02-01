@@ -48,7 +48,7 @@ jobs:
 
       - name: Trigger Portainer webhook
         run: |
-          curl -X POST \
+           curl -v -X POST \
             -H "CF-Access-Client-Id: $CF_CLIENT_ID" \
             -H "CF-Access-Client-Secret: $CF_CLIENT_SECRET" \
             "$PORTAINER_WEBHOOK_URL"
