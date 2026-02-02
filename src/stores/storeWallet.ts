@@ -18,23 +18,21 @@ export const useWalletStore = defineStore("wallet", {
       this.loading = true;
       this.error = null;
 
-      try {
-        const { data, error } = await walletService.getAll();
+      const { data, error } = await walletService.getAll();
 
-        if (error) {
-          this.error = error;
-          this.data = [];
-          return;
-        }
-
-        if (data) {
-          this.data = data;
-        }
-      } catch (error) {
-        this.error = "Erro inesperado ao buscar caixas";
-      } finally {
-        this.loading = false;
+      if (error) {
+        this.error = error;
+        this.data = [];
+        return;
       }
+
+      if (data) {
+        this.data = data;
+        this.loading = false;
+        return;
+      }
+
+      this.error = "Erro inesperado ao buscar caixas";   
     },
 
     clearWallets() {
@@ -72,7 +70,8 @@ export const useWalletStore = defineStore("wallet", {
 
     async updateWallet(wallet: Wallet): Promise<boolean> {
       if (!this.walletUpdate) {
-        this.error = "Wallet vazia no store ao atualizar, contate o desenvolvedor.";
+        this.error =
+          "Wallet vazia no store ao atualizar, contate o desenvolvedor.";
         return false;
       }
 
@@ -81,7 +80,7 @@ export const useWalletStore = defineStore("wallet", {
       const payload: Wallet = {
         id: this.walletUpdate.id,
         nome: wallet.nome,
-        valorTotal: this.walletUpdate.valorTotal, 
+        valorTotal: this.walletUpdate.valorTotal,
       };
 
       const { success, error } = await walletService.update(payload);
@@ -94,6 +93,5 @@ export const useWalletStore = defineStore("wallet", {
 
       return success;
     },
-
   },
 });
