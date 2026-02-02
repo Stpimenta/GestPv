@@ -88,7 +88,6 @@ const openEdit = (id) => {
 }
 
 
-
 //DETAILS DIALOG
 const visibleDetailsDialog = ref(false);
 const detailsId = ref(null);
@@ -110,7 +109,7 @@ const openDetails = (id) => {
     </div>
 
     <!-- loading -->
-    <div class="loading" v-if="walletStore.loading && walletStore.data == null">
+    <div class="loading" v-if="walletStore.loading">
       <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
     </div>
 

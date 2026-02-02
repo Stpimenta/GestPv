@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import {
-  expenseService,
-} from "@/services";
+import { expenseService } from "@/services";
 import type {
   Expense,
   ExpenseCreate,
@@ -14,6 +12,7 @@ export const useExpenseStore = defineStore("expenses", {
   state: () => ({
     loading: false,
     createLoading: false,
+    detailsLoading: false,
     error: null as string | null,
     data: null as ExpensesResponse | null,
     expenseUpdate: null as ExpenseDetail | null,
@@ -62,10 +61,13 @@ export const useExpenseStore = defineStore("expenses", {
       this.hasMore = true;
     },
 
-    async createExpense(expense: ExpenseCreate, images?: File[]): Promise<boolean> {
+    async createExpense(
+      expense: ExpenseCreate,
+      images?: File[],
+    ): Promise<boolean> {
       this.createLoading = true;
       const response = await expenseService.create(expense, images);
-    
+
       this.createLoading = false;
 
       if (response.error) {
@@ -76,25 +78,27 @@ export const useExpenseStore = defineStore("expenses", {
       return response.success;
     },
 
-    async fetchExpenseById(id: number): Promise<ExpenseDetail| null> {
+    async fetchExpenseById(id: number): Promise<ExpenseDetail | null> {
 
+      this.detailsLoading = true;
       this.error = null;
       const { data, error } = await expenseService.getById(id);
- 
 
-    if (error) {
+      if (error) {
         this.error = error ?? "erro ao buscar contribuição";
         this.expenseUpdate = null;
         return null;
       }
 
-      
       this.expenseUpdate = data;
+      this.detailsLoading = false;
       return data;
     },
 
-    async updateExpense(expense:ExpenseDetail, newImages:File[]): Promise<boolean> {
-
+    async updateExpense(
+      expense: ExpenseDetail,
+      newImages: File[],
+    ): Promise<boolean> {
       this.createLoading = true;
 
       if (!this.expenseUpdate) {
@@ -103,20 +107,22 @@ export const useExpenseStore = defineStore("expenses", {
         return false;
       }
 
-      const payload:ExpenseDetail = {
-        id:this.expenseUpdate.id,
-        data:expense.data,
-        descricao:expense.descricao,
-        idCaixa:expense.idCaixa,
-        valor:expense.valor,
-        numeroFiscal:expense.numeroFiscal,
-        urlComprovante:expense.urlComprovante,
-        images:expense.images
-      }
+      const payload: ExpenseDetail = {
+        id: this.expenseUpdate.id,
+        data: expense.data,
+        descricao: expense.descricao,
+        idCaixa: expense.idCaixa,
+        valor: expense.valor,
+        numeroFiscal: expense.numeroFiscal,
+        urlComprovante: expense.urlComprovante,
+        images: expense.images,
+      };
 
-  
-
-      const { success, error } = await expenseService.update(payload, this.expenseUpdate.data, newImages);
+      const { success, error } = await expenseService.update(
+        payload,
+        this.expenseUpdate.data,
+        newImages,
+      );
       this.createLoading = false;
 
       if (error) {

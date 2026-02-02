@@ -17,6 +17,7 @@ export const useEarnedStore = defineStore("earneds", {
   state: () => ({
     loading: false,
     createLoading: false,
+    detailsLoading:false,
     error: null as string | null,
     data: null as EarnedsResponse | null,
     earnedDetail: null as EarnedDetail | null,
@@ -101,6 +102,7 @@ export const useEarnedStore = defineStore("earneds", {
     },
 
     async fetchEarnedById(id: number): Promise<EarnedDetail | null> {
+      this.detailsLoading = true;
       this.error = null;
       const { data, error } = await earnedService.getById(id);
       console.log(data);
@@ -112,6 +114,7 @@ export const useEarnedStore = defineStore("earneds", {
       }
 
       this.earnedDetail = data;
+      this.detailsLoading = false;
       return data;
     },
 

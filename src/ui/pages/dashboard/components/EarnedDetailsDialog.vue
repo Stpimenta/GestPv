@@ -141,115 +141,121 @@ const getFileType = (file) => {
                 <i class="pi pi-arrow-circle-up" style="color: #4EC772;"></i>
 
                 <div class="div-header-desc">
-                    <span class="bold ellipsis">{{ form.descricao ? form.descricao : form.tokenMembro }}</span>
-                    <span class="">{{ `${props.detailsId}` }}</span>
+                    <span class="bold ellipsis" v-if="!earnedStore.detailsLoading">{{ form.descricao ? form.descricao : form.tokenMembro }}</span>
+                    <span class="" v-if="!earnedStore.detailsLoading">{{ `${props.detailsId}` }}</span>
                 </div>
 
             </div>
         </template>
 
-
-        <div class="container-details">
-
-            <div class="details-card">
-
-                <p class="details-label">
-                    Valor
-                </p>
-                <p class="details-cash">
-                    {{ new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    }).format(form.valor) }}
-                </p>
-
-            </div>
-
-            <div class="details-card">
-
-                <p class="details-label">
-                    Caixa
-                </p>
-                <p class="details-info">
-                    {{ walletName }}
-                </p>
-            </div>
-
-
-            <div class="details-card">
-
-                <p class="details-label">
-                    Data
-                </p>
-                <p class="details-info">
-                    {{ formatDate(form.data) }}
-                </p>
-            </div>
-
-            <div v-if="form.tokenMembro && form.descricao" class="details-card">
-
-                <p class="details-label">
-                    Token Membro
-                </p>
-                <p class="details-info">
-                    {{ form.tokenMembro }}
-                </p>
-
-            </div>
-
-
+        <div v-if="earnedStore.detailsLoading" class="loading-wrapper">
+            <i class="pi pi-spin pi-spinner"></i>
         </div>
 
-        <!-- Carousel -->
-        <Carousel v-if="form.images.length" :value="form.images" :numVisible="1" :numScroll="1">
-            <template #item="slotProps">
-                <div class="carousel-item-center">
+        <div v-else>
+            <div class="container-details">
 
-                    <!-- IMG -->
-                    <a v-if="getFileType(slotProps.data) === 'image'" :href="slotProps.data.presignedUrl"
-                        target="_blank" rel="noopener" class="image-link">
-                        <img :src="slotProps.data.presignedUrl" class="carousel-image" />
-                    </a>
+                <div class="details-card">
 
-                    <!-- PDF -->
-                    <div v-else-if="getFileType(slotProps.data) === 'pdf'" class="pdf-preview">
-                        <div class="pdf-icon">
-                            <i class="pi pi-file-pdf"></i>
-                            <a :href="slotProps.data.presignedUrl" target="_blank" rel="noopener">
-                                Abrir PDF
-                            </a>
-                        </div>
-                        <p>{{ slotProps.data.url }}</p>
-                    </div>
-
-                    <!-- DOC -->
-                    <div v-else-if="getFileType(slotProps.data) === 'doc'" class="pdf-preview">
-                        <div class="pdf-icon">
-                            <i class="pi pi-file-word"></i>
-                            <a :href="slotProps.data.presignedUrl" download target="_blank" rel="noopener">
-                                Baixar documento
-                            </a>
-                        </div>
-                        <p>{{ slotProps.data.url }}</p>
-                    </div>
-
-                    <!-- OUTROS -->
-                    <div v-else class="file-preview">
-                        <i class="pi pi-file"></i>
-                        <a :href="slotProps.data.presignedUrl" download target="_blank">
-                            Baixar arquivo
-                        </a>
-                    </div>
+                    <p class="details-label">
+                        Valor
+                    </p>
+                    <p class="details-cash">
+                        {{ new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        }).format(form.valor) }}
+                    </p>
 
                 </div>
-            </template>
-        </Carousel>
+
+                <div class="details-card">
+
+                    <p class="details-label">
+                        Caixa
+                    </p>
+                    <p class="details-info">
+                        {{ walletName }}
+                    </p>
+                </div>
+
+
+                <div class="details-card">
+
+                    <p class="details-label">
+                        Data
+                    </p>
+                    <p class="details-info">
+                        {{ formatDate(form.data) }}
+                    </p>
+                </div>
+
+                <div v-if="form.tokenMembro && form.descricao" class="details-card">
+
+                    <p class="details-label">
+                        Token Membro
+                    </p>
+                    <p class="details-info">
+                        {{ form.tokenMembro }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+            <!-- Carousel -->
+            <Carousel v-if="form.images.length" :value="form.images" :numVisible="1" :numScroll="1">
+                <template #item="slotProps">
+                    <div class="carousel-item-center">
+
+                        <!-- IMG -->
+                        <a v-if="getFileType(slotProps.data) === 'image'" :href="slotProps.data.presignedUrl"
+                            target="_blank" rel="noopener" class="image-link">
+                            <img :src="slotProps.data.presignedUrl" class="carousel-image" />
+                        </a>
+
+                        <!-- PDF -->
+                        <div v-else-if="getFileType(slotProps.data) === 'pdf'" class="pdf-preview">
+                            <div class="pdf-icon">
+                                <i class="pi pi-file-pdf"></i>
+                                <a :href="slotProps.data.presignedUrl" target="_blank" rel="noopener">
+                                    Abrir PDF
+                                </a>
+                            </div>
+                            <p>{{ slotProps.data.url }}</p>
+                        </div>
+
+                        <!-- DOC -->
+                        <div v-else-if="getFileType(slotProps.data) === 'doc'" class="pdf-preview">
+                            <div class="pdf-icon">
+                                <i class="pi pi-file-word"></i>
+                                <a :href="slotProps.data.presignedUrl" download target="_blank" rel="noopener">
+                                    Baixar documento
+                                </a>
+                            </div>
+                            <p>{{ slotProps.data.url }}</p>
+                        </div>
+
+                        <!-- Others -->
+                        <div v-else class="file-preview">
+                            <i class="pi pi-file"></i>
+                            <a :href="slotProps.data.presignedUrl" download target="_blank">
+                                Baixar arquivo
+                            </a>
+                        </div>
+
+                    </div>
+                </template>
+            </Carousel>
+        </div>
+
 
         <!-- btns -->
         <div class="btn-row">
             <Button type="submit" @click="onEdit(props.detailsId)" label="Editar" icon="pi pi-pencil"
-                severity="secondary" class="exit-button" />
-            <Button type="submit" @click="closeDialog" label="Fechar" severity="primary" class="exit-button" />
+                severity="secondary" class="exit-button" :disabled="earnedStore.detailsLoading"/>
+            <Button type="submit" @click="closeDialog" label="Fechar" severity="primary" class="exit-button" :disabled="earnedStore.detailsLoading"/>
         </div>
 
     </Dialog>
@@ -400,4 +406,17 @@ const getFileType = (file) => {
     align-items: center;
     gap: 1rem;
 }
+
+.loading-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+}
+
+.loading-wrapper i{
+    font-size: 2rem;
+    color: var(--p-primary-800);
+}
+
 </style>
