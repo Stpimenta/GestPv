@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, onUnmounted} from 'vue';
 import TransactionCard from './components/TransactionCard.vue'
 import { formatters } from '../../../utils/formatters';
 
@@ -180,6 +180,12 @@ const fetchCurrentMonth = async () => {
 onMounted(async () => {
   await walletStore.fetchWallets();
   await fetchCurrentMonth();
+});
+
+onUnmounted(() => {
+  
+  reportStore.clearReport();
+  
 });
 
 
