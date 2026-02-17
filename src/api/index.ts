@@ -4,3 +4,4 @@ export * from "./walletApi";
 export * from "./earnedApi";
 export * from "./memberApi";
 export * from "./periodBlockedApi";
+export * from "./reportApi";
