@@ -80,6 +80,7 @@ watch(
             observer?.disconnect()
             memberStore.resetMembers()
             await memberStore.fetchMembers()
+            console.log(memberStore.data);
             setupObserver()
         }
     }

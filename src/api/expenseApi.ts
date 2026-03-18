@@ -54,7 +54,7 @@ export const expenseApi = {
     return ibpvApi.get<ExpensesResponse>("/Gasto", { params: query });
   },
 
-  getById(id: Number) {
+  getById(id: number) {
     return ibpvApi.get(`/Gasto/${id}`);
   },
 
@@ -74,11 +74,6 @@ export const expenseApi = {
         formData.append("images", file);
       });
     }
-
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
     return ibpvApi.post("/Gasto", formData, {
       headers: {
         Accept: "text/plain",
@@ -109,9 +104,6 @@ export const expenseApi = {
       });
     }
 
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
 
     return ibpvApi.put(`/Gasto/${expense.id}`, formData, {
       headers: {
