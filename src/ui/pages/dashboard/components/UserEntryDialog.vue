@@ -731,10 +731,6 @@ const onSubmit = async () => {
    margin-right: 1rem;
 }
 
-/* .send-button {
-    width: 55%;
-} */
-
 .form-wrapper {
     position: relative;
 }

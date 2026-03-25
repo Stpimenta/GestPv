@@ -134,7 +134,7 @@ const confirmRemove = (item) => {
     },
     accept: async () => {
       // se houver service de delete, chamar aqui
-      // await memberService.delete(member.id);
+      await memberStore.deleteMember(item.id);
     },
     reject: () => {
 

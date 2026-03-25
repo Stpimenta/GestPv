@@ -86,7 +86,6 @@ export const memberService = {
         };
       }
 
-
       return {
         success: false,
         error: "Erro Desconhecido",
@@ -106,9 +105,7 @@ export const memberService = {
         success: true,
         error: null,
       };
-    } 
-
-    catch (err) {
+    } catch (err) {
       if (axios.isAxiosError(err)) {
         const response = err.response;
 
@@ -125,13 +122,11 @@ export const memberService = {
         };
       }
 
-
       return {
         success: false,
         error: "Erro Desconhecido",
       };
     }
-    
   },
 
   async getById(
@@ -142,6 +137,17 @@ export const memberService = {
       return { data: response.data, error: null };
     } catch (err) {
       return { data: null, error: parseAxiosError(err) };
+    }
+  },
+
+  async delete(
+    memberId: number,
+  ): Promise<{ success: boolean; error: string | null }> {
+    try {
+      await memberApi.delete(memberId);
+      return { success: true, error: null };
+    } catch (err) {
+      return { success: false, error: parseAxiosError(err) };
     }
   },
 };
