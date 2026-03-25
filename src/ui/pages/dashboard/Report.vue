@@ -122,7 +122,6 @@ const currentMonthLabel = computed(() => {
 
 
 //downloading pdf reports
-
 const downloadMonthlyReport = async () => {
   const walletId = query.value.walletId
   const date = new Date(query.value.date);

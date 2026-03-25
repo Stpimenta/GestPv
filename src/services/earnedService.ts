@@ -9,7 +9,7 @@ import type {
   EarnedImage
 } from "../api/";
 import { parseAxiosError } from "./helpers/parseAxiosError";
-import { getMemberByToken } from "./memberService";
+import { memberService } from "./memberService";
 
 export interface EarnedServiceUICreate {
   valor: number;
@@ -59,7 +59,7 @@ export const earnedService = {
 
       let idMembro: number | undefined;
       if (earned.tokenMembro) {
-        const { member, error } = await getMemberByToken(earned.tokenMembro);
+        const { data: member, error } = await memberService.getByToken(earned.tokenMembro);
         if (error) return { success: false, error };
         idMembro = member!.id;
       }
@@ -94,7 +94,7 @@ export const earnedService = {
 
       let idMembro: number | undefined;
       if (earned.tokenMembro) {
-        const { member, error } = await getMemberByToken(earned.tokenMembro);
+        const { data: member, error } = await memberService.getByToken(earned.tokenMembro);
         if (error) return { success: false, error };
         idMembro = member!.id;
       }

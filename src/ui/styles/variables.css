@@ -8,9 +8,9 @@
   --h5-size: 1.1rem;
   --h6-size: 1rem;
 
-  --heading-weight: 560;      
-  --heading-line-height: 1.25; 
-  --heading-letter: -0.3px;    
+  --heading-weight: 560;
+  --heading-line-height: 1.25;
+  --heading-letter: -0.3px;
 
   /*space*/
   --space-1: 0.25rem;
@@ -26,7 +26,7 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-   /* base */
+  /* base */
   --z-base: 0;
 
   /* layout */
@@ -39,30 +39,89 @@
   /* modais */
   --z-modal: 40;
   --z-toast: 50;
-
 }
 
-
 :root {
-  --bg-header: var(--p-surface-100); 
-  --bg-surface: var(--p-surface-100); 
+  --bg-header: var(--p-surface-100);
+  --bg-surface: var(--p-surface-100);
   --border-subtle: rgba(119, 119, 119, 0.219);
   --bg-hover: rgba(0, 0, 0, 0.04);
   --scroll-thumb: rgba(0, 0, 0, 0.3);
   --text-muted: rgba(0, 0, 0, 0.6);
+
+  /* ROLES MENBER SCREEN */
+
+  /* ROOT */
+  --role-root-bg: rgba(239, 68, 68, 0.15);
+  --role-root-border: rgba(239, 68, 68, 0.4);
+  --role-root-color: #b91c1c;
+
+  /* INACTIVE */
+  --role-inactive-bg: rgba(156, 163, 175, 0.12);
+  --role-inactive-border: rgba(156, 163, 175, 0.25);
+  --role-inactive-color: #6b7280;
+
+  /* MEMBER */
+  --role-member-bg: rgba(37, 99, 235, 0.12);
+  --role-member-border: rgba(37, 99, 235, 0.35);
+  --role-member-color: #1d4ed8;
+
+  /* ADMIN */
+  --role-admin-bg: rgba(144, 106, 211, 0.12);
+  --role-admin-border: rgba(144, 106, 211, 0.35);
+  --role-admin-color: #8f52f0;
+
+  /* TREASURY */
+  --role-treasury-bg: rgba(16, 185, 129, 0.12);
+  --role-treasury-border: rgba(16, 185, 129, 0.2);
+  --role-treasury-color: #059669;
+
+  /* PENDING */
+  --role-pending-bg: rgba(107, 114, 128, 0.12);
+  --role-pending-border: rgba(107, 114, 128, 0.2);
+  --role-pending-color: #6b7280;
 }
 
-
 .my-app-dark {
-  --bg-header: var(--p-surface-800); 
-  --bg-surface: var(--p-surface-800); 
+  --bg-header: var(--p-surface-800);
+  --bg-surface: var(--p-surface-800);
   --border-subtle: rgba(255, 255, 255, 0.15);
   --bg-hover: rgba(255, 255, 255, 0.06);
   --scroll-thumb: rgba(255, 255, 255, 0.35);
   --text-muted: rgba(255, 255, 255, 0.65);
+
+  /* ROLES MENBER SCREEN */
+
+  /* ROOT */
+  --role-root-bg: rgba(239, 68, 68, 0.2);
+  --role-root-border: rgba(239, 68, 68, 0.45);
+  --role-root-color: #f87171;
+
+  /* MEMBER */
+  --role-member-bg: rgba(37, 99, 235, 0.25);
+  --role-member-border: rgba(37, 99, 235, 0.6);
+  --role-member-color: #60a5fa;
+
+  /* ADMIN */
+  --role-admin-bg: rgba(144, 106, 211, 0.25);
+  --role-admin-border: rgba(144, 106, 211, 0.6);
+  --role-admin-color: #c084fc;
+
+  /* TREASURY */
+  --role-treasury-bg: rgba(16, 185, 129, 0.25);
+  --role-treasury-border: rgba(16, 185, 129, 0.5);
+  --role-treasury-color: #34d399;
+
+  /* INACTIVE */
+  --role-inactive-bg: rgba(107, 114, 128, 0.2);
+  --role-inactive-border: rgba(107, 114, 128, 0.4);
+  --role-inactive-color: #9ca3af;
+
+  /* PENDING */
+  --role-pending-bg: rgba(107, 114, 128, 0.25);
+  --role-pending-border: rgba(107, 114, 128, 0.5);
+  --role-pending-color: #9ca3af;
 }
-
-
 
 * {
   scrollbar-width: thin;
