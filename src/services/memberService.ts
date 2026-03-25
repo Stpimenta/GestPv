@@ -4,9 +4,11 @@ import type {
   MembersResponse,
   Member,
   MemberCreate,
-  MemberDetail
+  MemberDetail,
+  MemberUpdate,
 } from "@/api";
 import { parseAxiosError } from "./helpers/parseAxiosError";
+import axios from "axios";
 
 export const memberService = {
   async getMembers(
@@ -68,23 +70,78 @@ export const memberService = {
         error: null,
       };
     } catch (err) {
-      console.log(err);
+      if (axios.isAxiosError(err)) {
+        const response = err.response;
+
+        if (response?.data?.title === "Email already exists") {
+          return {
+            success: false,
+            error: "Já existe um usuário com esse email",
+          };
+        }
+
+        return {
+          success: false,
+          error: parseAxiosError(err),
+        };
+      }
+
+
       return {
         success: false,
-        error: parseAxiosError(err),
+        error: "Erro Desconhecido",
       };
     }
   },
 
-  async getById(id: number): Promise<{ data: MemberDetail| null; error: string | null }> {
-  try {
+  async update(
+    id: number,
+    member: MemberUpdate,
+    image?: File,
+  ): Promise<{ success: boolean; error: string | null }> {
+    try {
+      await memberApi.update(id, member, image);
 
+      return {
+        success: true,
+        error: null,
+      };
+    } 
+
+    catch (err) {
+      if (axios.isAxiosError(err)) {
+        const response = err.response;
+
+        if (response?.data?.title === "Email already exists") {
+          return {
+            success: false,
+            error: "Já existe um usuário com esse email",
+          };
+        }
+
+        return {
+          success: false,
+          error: parseAxiosError(err),
+        };
+      }
+
+
+      return {
+        success: false,
+        error: "Erro Desconhecido",
+      };
+    }
+    
+  },
+
+  async getById(
+    id: number,
+  ): Promise<{ data: MemberDetail | null; error: string | null }> {
+    try {
       const response = await memberApi.getById(id);
       return { data: response.data, error: null };
-
     } catch (err) {
       return { data: null, error: parseAxiosError(err) };
     }
-  }
-
+  },
 };

@@ -100,16 +100,7 @@ watch(
 );
 
 
-watch(
-  () => walletStore.error,
-  (error) => {
-    if (error) {
-      EDvisible.value = true;
-      EDerror.value = error;
-      walletStore.error = "";
-    }
-  }
-)
+
 
 //ADD EXPENSE DIALOG || EDIT
 const visibleEntryDialog = ref(false);
@@ -178,12 +169,12 @@ const openDetails = (id) => {
         <div class="search-input">
           <IconField>
             <InputIcon class="pi pi-search" />
-            <InputText class="full-width" v-model="query.descricao" placeholder="Search" />
+            <InputText class="full-width" v-model="query.nome" placeholder="Search" />
           </IconField>
         </div>
 
 
-        <Button type="button" label="Filtros Avançados" icon="pi pi-filter" @click="showFilters = !showFilters" />
+        <!-- <Button type="button" label="Filtros Avançados" icon="pi pi-filter" @click="showFilters = !showFilters" /> -->
         <!-- Filters-->
         <div v-if="showFilters" class="filter-bar">
           <Calendar v-model="query.initialDate" placeholder="Data início" dateFormat="dd/mm/yy" class="" />

@@ -8,7 +8,7 @@ import { useToast } from 'primevue';
 import { useExpenseStore } from '@/stores/storeExpenses';
 import { useWalletStore } from '@/stores';
 import debounce from "lodash-es/debounce";
-import { genres, roles, estados, estadosCivis, paisesTelefone} from '@/constants/selectOptions'
+import { genres, roles, estados, estadosCivis, paisesTelefone } from '@/constants/selectOptions'
 import { useMemberStore } from '@/stores/storeMember';
 
 const expenseStore = useExpenseStore();
@@ -62,7 +62,8 @@ const form = reactive({
     igrejaBatismo: '',
 
     rule: null,
-    alarmAuth: false
+    alarmAuth: false,
+    urlImage: []
 })
 
 
@@ -170,22 +171,48 @@ const schema = z.object({
 
 
 const initForm = async () => {
+    const data = memberStore.memberUpdate;
 
-    const data = expenseStore.expenseUpdate;
-    const d = new Date(data.data);
-    form.data = new Date(
-        d.getUTCFullYear(),
-        d.getUTCMonth(),
-        d.getUTCDate()
-    );
-    form.valor = data.valor ?? null;
-    form.descricao = data.descricao ?? '';
-    form.idCaixa = data.idCaixa ?? null;
-    form.urlComprovante = data.urlComprovante ?? '';
-    form.numeroFiscal = data.numeroFiscal ?? '';
+    if (!data) return;
 
-    form.images = data.images;
+    form.nome = data.nome ?? '';
+    form.email = data.email ?? '';
 
+    form.bairroEdereco = data.bairroEdereco ?? '';
+    form.cidadeEndereco = data.cidadeEndereco ?? '';
+    form.ruaEdereco = data.ruaEdereco ?? '';
+    form.cepEndereco = data.cepEndereco ?? '';
+    form.numeroEndereco = data.numeroEndereco ?? '';
+    form.ufEndereco = data.ufEndereco ?? '';
+
+    form.data_nascimento = data.data_nascimento
+        ? new Date(data.data_nascimento)
+        : null;
+
+    form.filhos = data.filhos ?? false;
+    form.estadoCivil = data.estadoCivil ?? '';
+    form.genero = data.genero ?? null;
+    form.profissao = data.profissao ?? '';
+
+    form.cpf = data.cpf ?? '';
+    form.rgNumero = data.rGnumero ?? '';
+
+    form.telefone_pais = data.telefone_pais ?? '+';
+    form.telefoneNumero = data.telefoneNumero ?? '';
+
+    form.complementoEndereco = data.complementoEndereco ?? '';
+
+    form.dataBatismo = data.dataBatismo
+        ? new Date(data.dataBatismo)
+        : null;
+
+    form.pastorBatismo = data.pastorBatismo ?? '';
+    form.igrejaBatismo = data.igrejaBatismo ?? '';
+
+    form.rule = data.rule ?? null;
+    form.alarmAuth = data.alarmAuth ?? false;
+
+    form.urlImage = data.urlImage;
 };
 
 //open
@@ -194,7 +221,7 @@ watch(
     async (isOpen) => {
         if (isOpen) {
             if (props.editId) {
-                await expenseStore.fetchExpenseById(props.editId);
+                await memberStore.fetchMemberById(props.editId);
                 initForm();
             }
         }
@@ -259,8 +286,8 @@ const closeDialog = () => {
 
     if (hasPosted.value) {
         hasPosted.value = false;
-        expenseStore.resetExpenses();
-        expenseStore.fetchExpenses();
+        memberStore.resetMembers();
+        memberStore.fetchMembers();
     }
 }
 
@@ -279,6 +306,9 @@ watch(
 );
 
 const onSubmit = async () => {
+
+
+    //Error Schema
     Object.keys(errors).forEach(key => {
         errors[key] = ''
     });
@@ -309,14 +339,55 @@ const onSubmit = async () => {
 
 
 
-
+    //is edit
     const isEdit = !!props.editId;
+    let success = false;
+
+    if (isEdit) {
+
+        const mappedUpdate = {
+            nome: form.nome,
+            email: form.email,
+
+            cpf: form.cpf || undefined,
+            rgNumero: form.rgNumero || undefined,
+            telefone_pais: form.telefone_pais || undefined,
+            telefoneNumero: form.telefoneNumero || undefined,
+
+            bairroEdereco: form.bairroEdereco,
+            cidadeEndereco: form.cidadeEndereco,
+            ruaEdereco: form.ruaEdereco,
+            cepEndereco: form.cepEndereco,
+            numeroEndereco: form.numeroEndereco,
+            ufEndereco: form.ufEndereco,
+            complementoEndereco: form.complementoEndereco || undefined,
+
+            data_nascimento: form.data_nascimento,
 
 
+            dataBatismo: form.dataBatismo,
 
-    const success = isEdit
-        ? await memberStore.updateExpense(form, files.value)
-        : await memberStore.createMember(form, files.value);
+
+            pastorBatismo: form.pastorBatismo || undefined,
+            igrejaBatismo: form.igrejaBatismo || undefined,
+
+            filhos: form.filhos,
+            profissao: form.profissao || undefined,
+            estadoCivil: form.estadoCivil,
+
+            status: memberStore.memberUpdate?.status ?? 1,
+            rule: Number(form.rule),
+            genero: Number(form.genero),
+
+            alarmAuth: form.alarmAuth ?? false,
+            urlImage: form.urlImage ? [form.urlImage] : []
+        };
+
+        success = await memberStore.updateMember(mappedUpdate, files.value);
+
+    } else {
+        success = await memberStore.createMember(form, files.value);
+    }
 
     if (success) {
         if (isEdit) {
@@ -341,27 +412,31 @@ const onSubmit = async () => {
         clearDialog();
     }
 
+
+
 };
 
 
-
-
-// exist image
-const onRemoveExisting = (id) => {
-    form.images = form.images.filter(img => img.id !== id);
-
-}
+// // exist image
+// function onRemoveExisting(image) {
+//   form.urlImage = form.urlImage.filter(i => i.id !== image.id);
+// }
 
 
 </script>
 
 <template>
+
+
     <Dialog :visible="visible" modal :header="title" :style="{ width: '35rem' }"
         @update:visible="emit('update:visible', $event)">
 
 
         <div class="form-wrapper" :class="{ loading: debouncedCreateLoading }">
+
+
             <div class="form">
+
                 <h6 class="form-topics">Credenciais</h6>
 
                 <div class="form-row">
@@ -447,8 +522,9 @@ const onRemoveExisting = (id) => {
 
 
                     <div class="form-row-field">
-                        <InputMask v-model="form.telefoneNumero" mask="(99) 99999-9999" placeholder="Telefone"
-                            class="form-field" />
+
+                        <InputMask v-model="form.telefoneNumero" mask="(99) 9999?9-9999" placeholder="Telefone" />
+
                     </div>
 
 
@@ -469,8 +545,9 @@ const onRemoveExisting = (id) => {
                 <div class="form-row">
 
                     <div class="form-row-field">
-                        <InputText v-model="form.cepEndereco" placeholder="CEP" @input="errors.cepEndereco = ''"
-                            class="form-field" />
+                        <InputMask v-model="form.cepEndereco" mask="99999-999" placeholder="CEP"
+                            @input="errors.cepEndereco = ''" class="form-field" />
+
                         <Message v-if="errors.cepEndereco" severity="error" size="small" variant="simple">
                             {{ errors.cepEndereco }}
                         </Message>
@@ -584,15 +661,12 @@ const onRemoveExisting = (id) => {
                 <!-- file input -->
                 <h6>Imagem do Membro</h6>
                 <FileInput v-model="files" ref="fileInputRef" label="Imagem do Membro" :max-files="1" :max-size-mb="3"
-                    :existingImages="form.images" accept='image/*,.pdf,.doc,.docx'
-                    @remove-existing="onRemoveExisting" />
+                    :existingImages="[]" accept='image/*,.pdf,.doc,.docx' @remove-existing="onRemoveExisting" />
 
-                <!-- btns -->
-                <div class="btn-row">
-                    <Button @click="closeDialog" type="submit" label="Cancelar" severity="secondary"
-                        class="exit-button" />
-                    <Button @click="onSubmit" type="submit" label="Enviar" severity="primary" class="send-button" />
-                </div>
+
+
+
+
 
             </div>
 
@@ -601,9 +675,16 @@ const onRemoveExisting = (id) => {
             </div>
 
         </div>
+
+        <template #footer>
+            <!-- btns -->
+            <div class="btn-row">
+                <Button @click="closeDialog" type="submit" label="Cancelar" severity="secondary" class="exit-button" />
+                <Button @click="onSubmit" type="submit" label="Enviar" severity="primary" class="send-button" />
+            </div>
+        </template>
+
     </Dialog>
-
-
 
 
 </template>
@@ -647,12 +728,12 @@ const onRemoveExisting = (id) => {
 }
 
 .exit-button {
-    width: 35%;
+   margin-right: 1rem;
 }
 
-.send-button {
+/* .send-button {
     width: 55%;
-}
+} */
 
 .form-wrapper {
     position: relative;

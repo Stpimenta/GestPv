@@ -64,7 +64,7 @@ const initForm = async () => {
     form.numeroFiscal = data.numeroFiscal ?? '';
     
     form.images = data.images;
-
+    console.log(data);
 };
 
 //open

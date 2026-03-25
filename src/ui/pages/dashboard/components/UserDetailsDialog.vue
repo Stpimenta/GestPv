@@ -12,10 +12,9 @@ import { roleConfig } from '../mapping/roles'
 import { EnumRole, roleMap } from './../../../../api/memberApi';
 import { formatters } from '@/utils/formatters';
 
-import { genres, roles, estados, estadosCivis, paisesTelefone, getLabel} from '@/constants/selectOptions'
+import { genres, roles, estados, estadosCivis, paisesTelefone, getLabel } from '@/constants/selectOptions'
 
-const walletStore = useWalletStore();
-const expenseStore = useExpenseStore();
+
 const memberStore = useMemberStore();
 
 const props = defineProps({
@@ -29,11 +28,11 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible', 'update:detailsId', 'edit'])
 
-
 // form items
 const form = reactive({
     nome: '',
     email: '',
+    urlImage: '',
 
     bairroEdereco: '',
     cidadeEndereco: '',
@@ -67,7 +66,7 @@ const form = reactive({
 //init form 
 const initForm = async () => {
     const data = memberStore.memberUpdate;
-    
+
     form.nome = data.nome ?? '';
     form.email = data.email ?? '';
 
@@ -104,7 +103,7 @@ const initForm = async () => {
     form.role = data.rule ?? null;
     form.alarmAuth = data.alarmAuth ?? false;
     form.tokenContribuicao = data.tokenContribuicao;
-
+    form.urlImage = data.urlImage;
     console.log(data);
 
 };
@@ -137,15 +136,11 @@ const closeDialog = () => {
     }
 }
 
-
 // on edit
 const onEdit = (id) => {
     closeDialog();
     emit('edit', id)
 }
-
-
-
 
 const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.membro)
 
@@ -163,20 +158,18 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
         <template #header>
 
             <div class="div-header">
-
                 <i class="pi pi-user" style="color: var(--p-primary-400);"></i>
 
                 <span class="bold">
                     Detalhes do Usuário
                 </span>
-
             </div>
 
         </template>
 
 
 
-        <div v-if="expenseStore.detailsLoading" class="loading-wrapper">
+        <div v-if="memberStore.detailsLoading" class="loading-wrapper">
             <i class="pi pi-spin pi-spinner"></i>
         </div>
 
@@ -185,14 +178,17 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
             <div class="div-row div-info-image">
 
-                <div class="user-image">
-                    <img src="https://www.shutterstock.com/image-vector/thief-criminal-robber-scammer-hacker-600nw-2512791877.jpg"
-                        alt="user">
+                <div class="user-image" v-if="form.urlImage">
+                    <img :src="form.urlImage" alt="user">
+                </div>
+
+                <div class="user-image guest" v-else>
+                    <i class="pi pi-user"></i>
                 </div>
 
 
                 <div>
-                    <p class="user-name">{{form.nome}}</p>
+                    <p class="user-name">{{ form.nome }}</p>
 
                     <div class="card-function" :style="{
                         background: currentRole.bg,
@@ -208,12 +204,13 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
                         <div class="info-item">
                             <div class="label">Email</div>
-                            <div class="value">{{form.email}}</div>
+                            <div class="value">{{ form.email }}</div>
                         </div>
 
                         <div class="info-item">
                             <div class="label">Telefone</div>
-                            <div class="value">{{form.telefone_pais+' '+ formatters.phoneBRL(form.telefoneNumero)}}</div>
+                            <div class="value">{{ form.telefone_pais + ' ' + formatters.phoneBRL(form.telefoneNumero) }}
+                            </div>
                         </div>
 
                     </div>
@@ -223,12 +220,12 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
                         <div class="info-item">
                             <div class="label">Token</div>
-                            <div class="value">{{form.tokenContribuicao}}</div>
+                            <div class="value">{{ form.tokenContribuicao }}</div>
                         </div>
 
                         <div class="info-item">
                             <div class="label">Profissão </div>
-                            <div class="value">{{form.profissao}}</div>
+                            <div class="value">{{ form.profissao }}</div>
                         </div>
 
                     </div>
@@ -238,82 +235,79 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
             </div>
 
             <p class="titles">Informações Pessoais</p>
+
             <div class="more-infos-row">
 
                 <div class="info-item">
                     <div class="label">CPF</div>
-                    <div class="value">{{formatters.cpf(form.cpf)}}</div>
+                    <div class="value">{{ formatters.cpf(form.cpf) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">RG</div>
-                    <div class="value">{{formatters.rg(form.rgNumero)}}</div>
+                    <div class="value">{{ formatters.rg(form.rgNumero) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Data de Nascimento</div>
-                    <div class="value">{{formatters.dateBRL(form.data_nascimento)}}</div>
+                    <div class="value">{{ formatters.dateBRL(form.data_nascimento) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Gênero</div>
-                    <div class="value">{{getLabel(genres,form.genero)}}</div>
+                    <div class="value">{{ getLabel(genres, form.genero) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Estado Civil</div>
-                    <div class="value">{{form.estadoCivil}}</div>
+                    <div class="value">{{ form.estadoCivil }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Filhos</div>
-                    <div class="value">{{form.filhos ? 'sim' : 'não'}}</div>
+                    <div class="value">{{ form.filhos ? 'sim' : 'não' }}</div>
                 </div>
 
             </div>
 
 
-
-
-
-
-
             <p class="titles">Endereço</p>
+
             <div class="more-infos-row">
 
                 <div class="info-item">
                     <div class="label">Rua</div>
-                    <div class="value">{{form.ruaEdereco}}</div>
+                    <div class="value">{{ form.ruaEdereco }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Número</div>
-                    <div class="value">{{form.numeroEndereco}}</div>
+                    <div class="value">{{ form.numeroEndereco }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Bairro</div>
-                    <div class="value">{{form.bairroEdereco}}</div>
+                    <div class="value">{{ form.bairroEdereco }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Cidade</div>
-                    <div class="value">{{form.cidadeEndereco}}</div>
+                    <div class="value">{{ form.cidadeEndereco }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">UF</div>
-                    <div class="value">{{form.ufEndereco}}</div>
+                    <div class="value">{{ form.ufEndereco }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">CEP</div>
-                    <div class="value">{{formatters.cepBRL(form.cepEndereco)}}</div>
+                    <div class="value">{{ formatters.cepBRL(form.cepEndereco) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Complemento</div>
-                    <div class="value">{{form.complementoEndereco ? form.complementoEndereco : '-'}}</div>
+                    <div class="value">{{ form.complementoEndereco ? form.complementoEndereco : '-' }}</div>
                 </div>
 
             </div>
@@ -324,17 +318,17 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
                 <div class="info-item">
                     <div class="label">Data de Batismo</div>
-                    <div class="value">{{formatters.dateBRL(form.dataBatismo)}}</div>
+                    <div class="value">{{ formatters.dateBRL(form.dataBatismo) }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Pastor</div>
-                    <div class="value">{{form.pastorBatismo ? form.pastorBatismo : '-'}}</div>
+                    <div class="value">{{ form.pastorBatismo ? form.pastorBatismo : '-' }}</div>
                 </div>
 
                 <div class="info-item">
                     <div class="label">Igreja</div>
-                    <div class="value">{{form.igrejaBatismo ? form.igrejaBatismo : '-'}}</div>
+                    <div class="value">{{ form.igrejaBatismo ? form.igrejaBatismo : '-' }}</div>
                 </div>
 
             </div>
@@ -345,7 +339,7 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
                 <div class="info-item">
                     <div class="label">Alarme</div>
-                    <div class="value">{{form.alarmAuth ? 'ativo':'desativado'}}</div>
+                    <div class="value">{{ form.alarmAuth ? 'ativo' : 'desativado' }}</div>
                 </div>
 
             </div>
@@ -353,14 +347,12 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
         </div>
 
         <!-- btns -->
-
-
         <template #footer>
             <div class="btn-row">
                 <Button type="submit" @click="onEdit(props.detailsId)" label="Editar" icon="pi pi-pencil"
-                    severity="secondary" class="exit-button" :disabled="expenseStore.detailsLoading" />
+                    severity="secondary" class="exit-button" :disabled="memberStore.detailsLoading" />
                 <Button type="submit" @click="closeDialog" label="Fechar" severity="primary" class="exit-button"
-                    :disabled="expenseStore.detailsLoading" />
+                    :disabled="memberStore.detailsLoading" />
             </div>
         </template>
 
@@ -371,6 +363,7 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
 
 
 <style scoped>
+
 /* main */
 .container-details {
     display: flex;
@@ -425,7 +418,6 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
     color: var(--p-primary-400);
 }
 
-
 /* header */
 .div-header i {
     font-size: 2rem;
@@ -477,6 +469,26 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
     border-radius: 15%;
 }
 
+.user-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.user-image.guest {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+    border: 2px solid #ccc;
+}
+
+.user-image i {
+    font-size: 48px;
+    color: var(--p-primary-400);
+}
+
 .user-info {
 
     display: flex;
@@ -501,12 +513,6 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
     gap: 2rem;
 }
 
-/* .more-infos {
-    display: flex;
-    width: 50%;
-    gap: 1rem;
-    flex-wrap: wrap;
-} */
 
 /* loading */
 .loading-wrapper {
@@ -520,4 +526,5 @@ const currentRole = computed(() => roleConfig[roleMap[form.role]] ?? roleConfig.
     font-size: 2rem;
     color: var(--p-primary-800);
 }
+
 </style>

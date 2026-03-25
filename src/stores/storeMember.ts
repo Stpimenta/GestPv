@@ -1,9 +1,14 @@
 import { defineStore } from "pinia";
 import { memberService } from "@/services";
-import type { MembersQuery, MembersResponse , MemberCreate, MemberDetail} from "@/api";
+import type {
+  MembersQuery,
+  MembersResponse,
+  MemberCreate,
+  MemberDetail,
+  MemberUpdate
+} from "@/api";
 
 export const useMemberStore = defineStore("members", {
-
   state: () => ({
     loading: false,
     detailsLoading: false,
@@ -17,7 +22,6 @@ export const useMemberStore = defineStore("members", {
   }),
 
   actions: {
-
     async fetchMembers(query: MembersQuery) {
       if (this.loading || !this.hasMore) return;
 
@@ -75,8 +79,35 @@ export const useMemberStore = defineStore("members", {
       return response.success;
     },
 
-    async fetchMemberById(id: number): Promise<MemberDetail | null> {
+    async updateMember(member: MemberUpdate, newImage?: File[],): Promise<boolean> {
+      this.createLoading = true;
 
+      if (!this.memberUpdate) {
+        this.error =
+          "Membro vazio no store ao atualizar, contate o desenvolvedor.";
+        this.createLoading = false;
+        return false;
+      }
+
+      const file = newImage && newImage.length > 0 ? newImage[0] : undefined;
+
+      const { success, error } = await memberService.update(
+        this.memberUpdate.id,
+        member,
+        file,
+      );
+
+      this.createLoading = false;
+
+      if (error) {
+        this.error = error;
+        return false;
+      }
+
+      return success;
+    },
+
+    async fetchMemberById(id: number): Promise<MemberDetail | null> {
       this.detailsLoading = true;
       this.error = null;
 
@@ -95,7 +126,7 @@ export const useMemberStore = defineStore("members", {
       return data;
     },
 
+    
+
   },
-
-
 });

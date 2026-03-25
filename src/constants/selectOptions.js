@@ -43,11 +43,11 @@ export const estados = [
 ];
 
 export const estadosCivis = [
-    { label: 'Solteiro', value: 'Solteiro' },
-    { label: 'Casado', value: 'Casado' },
-    { label: 'Divorciado', value: 'Divorciado' },
-    { label: 'Viúvo', value: 'Viuvo' },
-    { label: 'União Estável', value: 'UniaoEstavel' }
+    { label: 'Solteiro', value: 'solteiro' },
+    { label: 'Casado', value: 'casado' },
+    { label: 'Divorciado', value: 'divorciado' },
+    { label: 'Viúvo', value: 'viuvo' },
+    { label: 'União Estável', value: 'uniaoEstavel' }
 ];
 
 export const paisesTelefone = [

@@ -33,5 +33,25 @@ O projeto será desenvolvido por etapas curtas e incrementais, com foco em:
 4. Relatórios e travamento de período  
 5. Refino visual e documentação
 
+
+
+## 🔄 Manutenções futuras
+
+1. Manejo do token (bug de n redirecionar para login e retornar serviço inválido).
+2. Erros e a abertura de telas (como o erro é um modal a parte, o modal que causa o erro continua aberto e as vezes com os dados antigos) resolver isso.
+3. sistema de imagem deve avisar limite e substituir automaticamente a imagem quando houver somente uma.
+4. ao inserir o cep no fomr de membro deve buscar o endereço na api do via cep.
+5. refatorar a edição de membros padronizar os dtos e melhorar a questão das imagens.
+6. ao editar nao recarregar toda a pagina apenas editar o item e manter
+7. Rever os códigos de erro back e front
+
+## 🔄 Features futuras
+
+1. Redefinir senha nativo
+2. Futuramente navegar melhor por periodos bloqueados - ou seja, mostrar qual perido esta bloqueando a mudança / transação
+
+
+
+
 ## 🧑‍💻 Autor
 **Sergio Pimenta** — Projeto voluntário e de aprimoramento técnico.

@@ -45,7 +45,7 @@ export const roleMap: Record<EnumRole, string> = {
 export interface MemberCreate {
   nome: string;
   email: string;
-  senha: string;
+  senha?: string;
   cpf?: string;
   rgNumero?: string;
   telefone_pais?: string;
@@ -71,6 +71,40 @@ export interface MemberCreate {
   rule: number;
   genero: number;
   alarmAuth?: boolean;
+}
+
+export interface MemberUpdate {
+  id: number;
+
+  nome: string;
+  email: string;
+
+  cpf?: string;
+  rgNumero?: string;
+  telefone_pais?: string;
+  telefoneNumero?: string;
+
+  bairroEdereco: string;
+  cidadeEndereco: string;
+  ruaEdereco: string;
+  cepEndereco: string;
+  numeroEndereco: string;
+  ufEndereco: string;
+  complementoEndereco?: string;
+
+  data_nascimento: string;
+  dataBatismo?: string;
+  pastorBatismo?: string;
+  igrejaBatismo?: string;
+
+  filhos: boolean;
+  profissao?: string;
+  estadoCivil: string;
+  status: number;
+  rule: number;
+  genero: number;
+  alarmAuth?: boolean;
+  urlImage: string;
 }
 
 export interface MemberDetail {
@@ -104,7 +138,6 @@ export interface MemberDetail {
 }
 
 export const memberApi = {
-
   getMembers(query: MembersQuery) {
     return ibpvApi.get<MembersResponse>("/Usuario", {
       params: query,
@@ -116,7 +149,7 @@ export const memberApi = {
 
     formData.append("Nome", member.nome);
     formData.append("Email", member.email);
-    formData.append("Senha", member.senha);
+    formData.append("Senha", member.senha ?? "");
 
     formData.append("Cpf", member.cpf ?? "");
     formData.append("RGnumero", member.rgNumero ?? "");
@@ -169,6 +202,58 @@ export const memberApi = {
       });
   },
 
+  update(id: number, member: MemberUpdate, image?: File) {
+    const formData = new FormData();
+
+    formData.append("Id", String(id));
+    formData.append("Nome", member.nome);
+    formData.append("Email", member.email);
+
+    formData.append("Cpf", member.cpf ?? "");
+    formData.append("RGnumero", member.rgNumero ?? "");
+    formData.append("Telefone_pais", member.telefone_pais ?? "");
+    formData.append("TelefoneNumero", member.telefoneNumero ?? "");
+
+    formData.append("BairroEdereco", member.bairroEdereco);
+    formData.append("CidadeEndereco", member.cidadeEndereco);
+    formData.append("RuaEdereco", member.ruaEdereco);
+    formData.append("CepEndereco", member.cepEndereco);
+    formData.append("NumeroEndereco", member.numeroEndereco);
+    formData.append("UfEndereco", member.ufEndereco);
+    formData.append("ComplementoEndereco", member.complementoEndereco ?? "");
+
+    formData.append("Data_nascimento", formatDateToApi(member.data_nascimento));
+
+    formData.append(
+      "dataBatismo",
+      member.dataBatismo ? formatDateToApi(member.dataBatismo) : "",
+    );
+
+    formData.append("pastorBatismo", member.pastorBatismo ?? "");
+    formData.append("igrejaBatismo", member.igrejaBatismo ?? "");
+
+    formData.append("filhos", String(member.filhos));
+    formData.append("profissao", member.profissao ?? "");
+    formData.append("estadoCivil", member.estadoCivil);
+    formData.append("status", String(member.status));
+    formData.append("Rule", String(member.rule));
+    formData.append("genero", String(member.genero));
+    formData.append("alarmAuth", String(member.alarmAuth ?? false));
+
+    // importante no update
+    if (image) {
+      formData.append("Image", image);
+    } else {
+      formData.append("urlImage", member.urlImage ?? "");
+    }
+
+    return ibpvApi.put(`/Usuario/${id}`, formData, {
+      headers: {
+        Accept: "text/plain",
+      },
+    });
+  },
+
   getById(id: number) {
     return ibpvApi.get<MemberDetail>(`/Usuario/${id}`, {
       headers: {
@@ -176,5 +261,4 @@ export const memberApi = {
       },
     });
   },
-
 };
