@@ -133,7 +133,6 @@ const confirmRemove = (item) => {
       severity: 'danger'
     },
     accept: async () => {
-      // se houver service de delete, chamar aqui
       await memberStore.deleteMember(item.id);
     },
     reject: () => {
