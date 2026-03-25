@@ -261,4 +261,13 @@ export const memberApi = {
       },
     });
   },
+
+  delete(id: number) {
+    return ibpvApi.delete<string>(`/Usuario/${id}`, {
+      headers: {
+        Accept: "text/plain",
+      },
+    });
+  },
+  
 };

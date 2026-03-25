@@ -5,7 +5,7 @@ import type {
   MembersResponse,
   MemberCreate,
   MemberDetail,
-  MemberUpdate
+  MemberUpdate,
 } from "@/api";
 
 export const useMemberStore = defineStore("members", {
@@ -79,7 +79,10 @@ export const useMemberStore = defineStore("members", {
       return response.success;
     },
 
-    async updateMember(member: MemberUpdate, newImage?: File[],): Promise<boolean> {
+    async updateMember(
+      member: MemberUpdate,
+      newImage?: File[],
+    ): Promise<boolean> {
       this.createLoading = true;
 
       if (!this.memberUpdate) {
@@ -126,7 +129,31 @@ export const useMemberStore = defineStore("members", {
       return data;
     },
 
-    
+    async deleteMember(memberId: number) {
+      const response = await memberService.delete(memberId);
 
+      if (response.success) {
+        // se tiver lista
+        if (this.data) {
+          this.data.items = this.data.items.filter((item) => item.id !== memberId);
+        }
+
+     
+        if (this.data?.items) {
+          this.data.items = this.data.items.filter(
+            (item) => item.id !== memberId,
+          );
+        }
+
+        // limpa detalhe se for o mesmo
+        if (this.memberUpdate?.id === memberId) {
+          this.memberUpdate = null;
+        }
+
+        return;
+      }
+
+      this.error = response.error;
+    },
   },
 });
