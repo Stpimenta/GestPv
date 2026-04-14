@@ -6,15 +6,17 @@ import { usePrimeVue } from 'primevue/config';
 import FileInput from './FileInput.vue'
 import { useToast } from 'primevue';
 import { useWalletStore } from '@/stores';
+import { useBlockedPeriodsStore } from '@/stores';
 import debounce from "lodash-es/debounce";
 
 
 
 const walletStore = useWalletStore();
+const blockedPeriodsStore = useBlockedPeriodsStore();
 
 const props = defineProps({
     visible: { type: Boolean, required: true },
-    title: { type: String, default: 'Novo Caixa' },
+    title: { type: String, default: 'Novo Período' },
     editId: {
         type: Number,
         default: null
@@ -30,7 +32,9 @@ const toast = useToast();
 
 // form items
 const form = reactive({
-    nome: '',
+    startDate: '',
+    endDate: '',
+    description: '',
 });
 
 // File Input
@@ -59,7 +63,9 @@ watch(
 
 // Errors
 const errors = reactive({
-    nome: '',
+    startDate: '',
+    endDate: '',
+    description: '',
 });
 
 const clearError = (field) => {
@@ -68,11 +74,22 @@ const clearError = (field) => {
 
 // schema
 const schema = z.object({
-  nome: z
-    .string({ required_error: 'Nome é obrigatório' })
-    .min(1, 'Nome é obrigatório')
-    .max(20, 'Nome não pode ter mais de 20 caracteres'),
-})
+    startDate: z
+        .preprocess((val) => (val === '' ? null : val), z.date().nullable())
+        .refine((val) => val !== null, {
+            message: 'Data inicial é obrigatória',
+        }),
+
+    endDate: z
+        .preprocess((val) => (val === '' ? null : val), z.date().nullable())
+        .refine((val) => val !== null, {
+            message: 'Data final é obrigatória',
+        }),
+
+    description: z
+        .string()
+        .max(400, 'Descrição não pode ter mais de 400 caracteres'),
+});
 
 // closeModal
 watch(
@@ -85,7 +102,7 @@ watch(
 
 //clearDialog
 const clearDialog = () => {
-   
+
     form.nome = '';
     clearError('nome');
     if (props.editId) {
@@ -103,9 +120,9 @@ const closeDialog = () => {
     clearDialog();
 
     if (hasPosted.value) {
-     
-        walletStore.clearWallets();
-        walletStore.fetchWallets();
+
+        blockedPeriodsStore.resetBlockedPeriods();
+        blockedPeriodsStore.fetchBlockedPeriods();
         hasPosted.value = false;
     }
 }
@@ -117,7 +134,7 @@ const setDebouncedLoading = debounce((val) => {
 }, 200);
 
 watch(
-    () => walletStore.createLoading,
+    () => blockedPeriodsStore.createLoading,
     (val) => {
         setDebouncedLoading(val);
     },
@@ -133,7 +150,11 @@ const onSubmit = async () => {
 
     if (!result.success) {
         const fieldErrors = result.error.flatten().fieldErrors;
-        errors.nome = fieldErrors.nome?.[0] || '';
+
+        errors.startDate = fieldErrors.startDate?.[0] || '';
+        errors.endDate = fieldErrors.endDate?.[0] || '';
+        errors.description = fieldErrors.description?.[0] || '';
+
         return;
     }
 
@@ -146,7 +167,7 @@ const onSubmit = async () => {
     const isEdit = !!props.editId;
     const success = isEdit
         ? await walletStore.updateWallet(payload)
-        : await walletStore.createWallet(payload);
+        : await blockedPeriodsStore.createBlockedPeriod(payload);
 
 
     if (success) {
@@ -186,18 +207,43 @@ const onSubmit = async () => {
         <div class="form-wrapper" :class="{ loading: debouncedCreateLoading }">
 
             <div class="form">
-                <div>
-                    <InputText v-model="form.nome" placeholder="Nome" @input="clearError('nome')"
-                        class="form-field" />
-                    <Message v-if="errors.nome" severity="error" size="small" variant="simple">
-                        {{ errors.nome }}
-                    </Message>
+                <div class="form-row">
+
+
+                    <div class="form-row-field">
+                        <DatePicker v-model="form.startDate" placeholder="Data Inicial" showIcon fluid
+                            iconDisplay="input" inputId="icondisplay" @update:modelValue="clearError('startDate')" />
+                        <Message v-if="errors.startDate" severity="error" size="small" variant="simple">
+                            {{ errors.startDate }}
+                        </Message>
+                    </div>
+
+                    <div class="form-row-field">
+                        <DatePicker v-model="form.endDate" placeholder="Data Final" showIcon fluid iconDisplay="input"
+                            inputId="icondisplay" @update:modelValue="clearError('endDate')" />
+                        <Message v-if="errors.endDate" severity="error" size="small" variant="simple">
+                            {{ errors.endDate }}
+                        </Message>
+                    </div>
+
+                    <div class="form-text-area">
+                        <FloatLabel>
+                            <Textarea id="over_label" v-model="form.description" rows="5" cols="30" size="large"
+                                style="resize: none; width: 100%;" />
+                            <label for="over_label">Descrição</label>
+                        </FloatLabel>
+                        <Message v-if="errors.description" severity="error" size="small" variant="simple">
+                            {{ errors.description }}
+                        </Message>
+                    </div>
+
                 </div>
-                  <!-- btns -->
+
+                <!-- btns -->
                 <div class="btn-row">
                     <Button @click="closeDialog" type="submit" label="Cancelar" severity="secondary"
                         class="exit-button" />
-                    <Button @click="onSubmit" type="submit" label="Enviar" severity="primary" class="send-button" />
+                    <Button @click="onSubmit" type="submit" label="Adicionar" severity="primary" class="send-button" />
                 </div>
             </div>
 
@@ -219,6 +265,9 @@ const onSubmit = async () => {
 .form {
     display: flex;
     flex-direction: column;
+
+    justify-content: center;
+
     gap: 1rem;
 }
 
@@ -233,8 +282,13 @@ const onSubmit = async () => {
 }
 
 .form-row-field {
-    width: 48%;
+    width: 47%;
 
+}
+
+.form-text-area {
+    margin-top: 0.5rem;
+    width: 100%;
 }
 
 .btn-row {

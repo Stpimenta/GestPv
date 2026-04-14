@@ -16,10 +16,11 @@ const route = useRoute();
 
 const menuItems: MenuItem[] = [
   { label: "Dashboard", key: "dashboard", icon: "pi pi-box", to: "/dash" },
-  { label: "Caixas", key: "caixa", icon: "pi pi-wallet", to: "/dash/wallet" },
+  { label: "Usuários", key: "usuarios", icon: "pi pi-users", to: "/dash/users" },
   { label: "Entradas", key: "entrada", icon: "pi pi-arrow-circle-up", to: "/dash/earned" },
   { label: "Saídas", key: "saida", icon: "pi pi-arrow-circle-down", to: "/dash/expenses" },
-  { label: "Usuários", key: "usuarios", icon: "pi pi-users", to: "/dash/users" },
+  { label: "Caixas", key: "caixa", icon: "pi pi-wallet", to: "/dash/wallet" },
+  { label: "Fechamento", key: "fechamento", icon: "pi pi-calendar-times", to: "/dash/periods" },
   { label: "Relatórios", key: "relatorios", icon: "pi pi-chart-bar", to: "/dash/report" },
 ];
 

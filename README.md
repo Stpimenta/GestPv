@@ -16,22 +16,23 @@ O objetivo é fornecer uma interface leve, responsiva e intuitiva, mantendo toda
 - **PrimeVue** — biblioteca de componentes UI  
 
 ## 🧩 Funcionalidades Principais
-- Tela de login e autenticação
-- Layout moderno e responsivo
-  - Navbar fluida para mobile e desktop
-  - Header polido com logotipo e acesso ao perfil
-- CRUD de Membros, Gastos, Contribuições e Caixa
+- Tela de login e autenticação - feito
+- Layout moderno e responsivo - feito
+  - Navbar fluida para mobile e desktop - feito
+  - Header polido com logotipo e acesso ao perfil - feito
+- CRUD de Membros, Gastos, Contribuições e Caixa - feito
 - Bloqueio de período financeiro
-- Relatórios financeiros detalhados
+- Relatórios financeiros detalhados - feito
 
 ## 🔄 Planejamento
 O projeto será desenvolvido por etapas curtas e incrementais, com foco em:
 
-1. Estrutura inicial e autenticação  
-2. Layout base e navegação  
-3. Módulos (Membros, Gastos, Contribuições, Caixa)  
-4. Relatórios e travamento de período  
-5. Refino visual e documentação
+1. Estrutura inicial e autenticação - feito
+2. Layout base e navegação   - feito
+3. Módulos (Membros, Gastos, Contribuições, Caixa)   - feito
+4. Relatórios e travamento de período   
+5. Refino visual - feito
+6. documentação - feito
 
 
 
@@ -44,6 +45,8 @@ O projeto será desenvolvido por etapas curtas e incrementais, com foco em:
 5. refatorar a edição de membros padronizar os dtos e melhorar a questão das imagens.
 6. ao editar nao recarregar toda a pagina apenas editar o item e manter
 7. Rever os códigos de erro back e front
+8. Loading em usuarios
+9. adicionar melhoria de navegação no unlock, fazer a barra de progresso subir esperar uns segundos e fechar, e permitir erros
 
 ## 🔄 Features futuras
 

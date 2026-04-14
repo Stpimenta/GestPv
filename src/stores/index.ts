@@ -6,3 +6,4 @@ export * from "./storeEarned";
 export * from "./storeExpenses";
 export * from "./storeReport";
 export * from "./storeMember";
+export * from "./storePeriodBlocked";

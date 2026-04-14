@@ -17,7 +17,7 @@ import { BluePreset } from "@/ui/styles/BluePreset.ts";
 
 //primeVUE components
 import { Dialog,Button,FloatLabel,InputText,InputNumber,Password,Menu,Calendar,IconField,InputIcon,TreeTable,Column,Message,
-  Toast,DatePicker,FileUpload,Select,ConfirmDialog,Avatar,Carousel,DataTable, Checkbox, InputMask} from "primevue";
+  Toast,DatePicker,FileUpload,Select,ConfirmDialog,Avatar,Carousel,DataTable, Checkbox, InputMask,Textarea} from "primevue";
 import { ToastService } from "primevue";
 import ConfirmationService from 'primevue/confirmationservice'
 //theme
@@ -89,7 +89,7 @@ app.component("Carousel", Carousel);
 app.component("DataTable", DataTable);
 app.component("Checkbox", Checkbox);
 app.component("InputMask", InputMask);
-
+app.component("Textarea", Textarea);
 
 
 

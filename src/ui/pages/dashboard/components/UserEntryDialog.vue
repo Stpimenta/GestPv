@@ -746,7 +746,7 @@ const onSubmit = async () => {
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bold;
-    z-index: 10;
+    z-index: var(--z-overlay);;
 }
 
 @media (max-width: 768px) {

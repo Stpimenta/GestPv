@@ -49,6 +49,9 @@
   --scroll-thumb: rgba(0, 0, 0, 0.3);
   --text-muted: rgba(0, 0, 0, 0.6);
 
+  --surface-elevated: rgba(0, 0, 0, 0.03);
+  --surface-border: rgba(0, 0, 0, 0.08);
+
   /* ROLES MENBER SCREEN */
 
   /* ROOT */
@@ -89,6 +92,9 @@
   --bg-hover: rgba(255, 255, 255, 0.06);
   --scroll-thumb: rgba(255, 255, 255, 0.35);
   --text-muted: rgba(255, 255, 255, 0.65);
+
+  --surface-elevated: rgba(255, 255, 255, 0.04);
+  --surface-border: rgba(255, 255, 255, 0.08);
 
   /* ROLES MENBER SCREEN */
 
