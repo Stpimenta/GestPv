@@ -14,6 +14,7 @@ import Earned from '@/ui/pages/dashboard/Earneds.vue';
 import Expenses from '@/ui/pages/dashboard/Expenses.vue';
 import Report from '@/ui/pages/dashboard/Report.vue';
 import Wallet from '@/ui/pages/dashboard/Wallet.vue';
+import Periods from '@/ui/pages/dashboard/Periods.vue';
 
 
 
@@ -29,6 +30,7 @@ const routes = [
             { path: 'expenses', component: Expenses},
             { path: 'report', component: Report},
             { path: 'wallet', component: Wallet},
+            { path: 'periods', component: Periods},
         ]
     },
 

@@ -391,6 +391,6 @@ const onRemoveExisting = (id) => {
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bold;
-    z-index: 10;
+    z-index: var(--z-overlay);
 }
 </style>

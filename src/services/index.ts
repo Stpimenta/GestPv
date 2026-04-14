@@ -4,3 +4,4 @@ export * from "./walletService.ts";
 export * from "./earnedService.ts"
 export * from "./memberService.ts";
 export * from "./reportService.ts";
+export * from "./periodBlockedService.ts";
