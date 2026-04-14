@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { blockedPeriodsService } from "@/services";
 import type {
-  BlockedPeriod,
   BlockedPeriodsQuery,
   BlockedPeriodsResponse,
   BlockedPeriodCreate,
