@@ -122,6 +122,30 @@ const currentMonthLabel = computed(() => {
 
 
 //downloading pdf reports
+const MONTH_ABBREVIATIONS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+const getReportFileDate = () => {
+  const date = new Date(query.value.date);
+  return {
+    month: MONTH_ABBREVIATIONS[date.getMonth()],
+    year: date.getFullYear(),
+  };
+};
+
+const sanitizeFileName = (name) => name.replace(/[\\/:*?"<>|]/g, '').trim();
+
+const buildMonthlyReportFileName = () => {
+  const { month, year } = getReportFileDate();
+  const wallet = walletStore.data.find(w => w.id === query.value.walletId);
+  const walletName = sanitizeFileName(wallet?.nome ?? `Caixa_${query.value.walletId}`);
+  return `${walletName}_${month} ${year}.pdf`;
+};
+
+const buildMonthlySummaryFileName = () => {
+  const { month, year } = getReportFileDate();
+  return `Resumo_Saldos_${month} ${year}.pdf`;
+};
+
 const downloadMonthlyReport = async () => {
   const walletId = query.value.walletId
   const date = new Date(query.value.date);
@@ -134,7 +158,7 @@ const downloadMonthlyReport = async () => {
   const url = window.URL.createObjectURL(pdfBlob);
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", `Relatorio_${walletId}_${month}_${year}.pdf`);
+  link.setAttribute("download", buildMonthlyReportFileName());
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -153,7 +177,7 @@ const downloadMonthlySummary = async () => {
   const url = window.URL.createObjectURL(pdfBlob);
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", `Resumo_Saldos_${month}_${year}.pdf`);
+  link.setAttribute("download", buildMonthlySummaryFileName());
   document.body.appendChild(link);
   link.click();
   link.remove();

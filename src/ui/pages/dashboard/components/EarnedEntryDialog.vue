@@ -108,8 +108,8 @@ const schema = z.object({
         .number()
         .nullable()
         .refine(v => v !== null, { message: 'Valor é obrigatório' })
-        .refine(v => v !== null && v >= 0.01, {
-            message: 'Valor deve ser maior que zero',
+        .refine(v => v !== null && v >= 0, {
+            message: 'Valor não pode ser negativo',
         }),
 
     descricao: z
@@ -276,7 +276,7 @@ const onSubmit = async () => {
 
                 <div>
                     <InputNumber @input="clearError('valor')" v-model="form.valor" mode="currency" currency="BRL"
-                        locale="pt-BR" :minFractionDigits="2" :maxFractionDigits="2" placeholder="R$ 0,00"
+                        locale="pt-BR" :min="0" :minFractionDigits="2" :maxFractionDigits="2" placeholder="R$ 0,00"
                         class="form-field" />
                     <Message v-if="errors.valor" severity="error" size="small" variant="simple">
                         {{ errors.valor }}
