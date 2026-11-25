@@ -162,8 +162,9 @@ const clearDialog = () => {
     form.descricao = '';
     form.data = '';
     form.idCaixa = null;
-    form.tokenMembro = null;
-    form.urlEnvelope = undefined;
+    form.tokenMembro = '';
+    form.urlEnvelope = '';
+    form.images = [];
     fileInputRef.value?.clear();
     if (props.editId) {
         emit('update:editId', null)
@@ -304,8 +305,8 @@ const onSubmit = async () => {
                             v-on:click="visibleSelectTokenDialog = true" />
                     </div>
 
-                    <Message v-if="errors.numeroFiscal" severity="error" size="small" variant="simple">
-                        {{ errors.numeroFiscal }}
+                    <Message v-if="errors.tokenMembro" severity="error" size="small" variant="simple">
+                        {{ errors.tokenMembro }}
                     </Message>
                 </div>
 
