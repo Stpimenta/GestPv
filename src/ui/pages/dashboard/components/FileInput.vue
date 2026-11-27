@@ -26,7 +26,7 @@ const props = defineProps({
   },
   maxFiles: {
     type: Number,
-    default: 5
+    default: Infinity
   }
 })
 
@@ -45,7 +45,7 @@ function onSelect(event) {
 
   errorMessage.value = ''
 
-  if (props.modelValue.length + inputFiles.length > props.maxFiles) {
+  if (Number.isFinite(props.maxFiles) && props.modelValue.length + inputFiles.length > props.maxFiles) {
     errorMessage.value = `Você pode selecionar no máximo ${props.maxFiles} arquivos`
     event.target.value = ''
     return

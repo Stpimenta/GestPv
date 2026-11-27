@@ -314,7 +314,7 @@ const onRemoveExisting = (id) => {
 
 
                 <!-- file input -->
-                <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes" :max-files="4"
+                <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes"
                     :max-size-mb="3" :existingImages="form.images" accept='image/*,.pdf,.doc,.docx' @remove-existing="onRemoveExisting" />
 
                 <!-- btns -->

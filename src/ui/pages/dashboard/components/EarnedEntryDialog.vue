@@ -335,7 +335,7 @@ const onSubmit = async () => {
 
 
                 <!-- file input -->
-                 <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes" :max-files="4"
+                 <FileInput v-model="files" ref="fileInputRef" label="Anexar comprovantes"
                     :max-size-mb="3" :existingImages="form.images" accept="
                     .pdf,.doc,.docx,
                     application/pdf,
